@@ -1,0 +1,454 @@
+/* ===== MOBILE RESPONSIVE STYLES ===== */
+
+/* Base Mobile Styles */
+@media (max-width: 768px) {
+  /* Safe Area */
+  .mobile-safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Typography */
+  .mobile-text-xs {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+  }
+  .mobile-text-sm {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+  .mobile-text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+  .mobile-text-lg {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+  }
+  .mobile-text-xl {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+  .mobile-text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  /* Spacing */
+  .mobile-p-2 {
+    padding: 0.5rem !important;
+  }
+  .mobile-p-3 {
+    padding: 0.75rem !important;
+  }
+  .mobile-p-4 {
+    padding: 1rem !important;
+  }
+  .mobile-px-2 {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  .mobile-px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  .mobile-px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .mobile-py-2 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .mobile-py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+  .mobile-py-6 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .mobile-mb-2 {
+    margin-bottom: 0.5rem !important;
+  }
+  .mobile-mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  .mobile-mb-6 {
+    margin-bottom: 1.5rem !important;
+  }
+  .mobile-mt-4 {
+    margin-top: 1rem !important;
+  }
+  .mobile-my-4 {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .mobile-space-x-1 > * + * {
+    margin-left: 0.25rem !important;
+  }
+  .mobile-space-x-2 > * + * {
+    margin-left: 0.5rem !important;
+  }
+  .mobile-space-x-3 > * + * {
+    margin-left: 0.75rem !important;
+  }
+  .mobile-space-y-3 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  .mobile-space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+  .mobile-space-y-6 > * + * {
+    margin-top: 1.5rem !important;
+  }
+
+  /* Grid System */
+  .mobile-grid-1 {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+  .mobile-grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5rem !important;
+  }
+  .mobile-grid-7 {
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 0.25rem !important;
+  }
+  .mobile-card-grid {
+    grid-template-columns: repeat(1, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  /* Form Elements - Improved for mobile */
+  .mobile-form-input {
+    padding: 1rem !important;
+    font-size: 1rem !important;
+    border-radius: 0.75rem !important;
+    min-height: 56px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Better form inputs for mobile */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 56px !important;
+    padding: 1rem !important;
+    border-radius: 0.75rem !important;
+    border: 1px solid #d1d5db !important;
+    background-color: white !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Buttons - Better touch targets */
+  .mobile-button {
+    min-height: 56px !important;
+    padding: 1rem 1.5rem !important;
+    font-size: 1rem !important;
+    border-radius: 0.75rem !important;
+    font-weight: 600 !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .mobile-button-small {
+    min-height: 48px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+
+  .mobile-button-primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3) !important;
+  }
+
+  .mobile-button-secondary {
+    background: white !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+  }
+
+  .mobile-touch-target {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Icons */
+  .mobile-icon-xs {
+    font-size: 0.75rem !important;
+  }
+  .mobile-icon-sm {
+    font-size: 0.875rem !important;
+  }
+  .mobile-icon-base {
+    font-size: 1rem !important;
+  }
+
+  /* Cards */
+  .mobile-card {
+    border-radius: 1rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .mobile-modal {
+    margin: 0.5rem !important;
+    max-height: 95vh !important;
+    border-radius: 1rem !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Images */
+  .mobile-image-video {
+    height: 12rem !important;
+    object-fit: cover !important;
+  }
+
+  /* Navigation */
+  .mobile-tabs {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .mobile-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mobile-tab-item {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-tab-active {
+    background: white !important;
+    color: #3b82f6 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Filter Chips */
+  .mobile-filter-chips {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .mobile-filter-chips::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mobile-filter-chip {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Calendar Specific */
+  .calendar-day {
+    min-height: 2.5rem !important;
+    font-size: 0.75rem !important;
+    padding: 0.25rem !important;
+  }
+
+  /* Loading */
+  .mobile-loading {
+    padding: 3rem 0 !important;
+  }
+
+  /* Scroll */
+  .mobile-scroll {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Prevent zoom on form focus */
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus,
+  input[type="time"]:focus,
+  input[type="number"]:focus,
+  select:focus,
+  textarea:focus {
+    font-size: 16px !important;
+  }
+
+  /* Better modal handling */
+  .booking-modal {
+    padding: 0.5rem !important;
+  }
+
+  .booking-modal-content {
+    max-height: 95vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 1rem !important;
+  }
+
+  /* Improved button styles */
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    min-height: 56px !important;
+    border-radius: 0.75rem !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .btn-secondary {
+    background: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
+    min-height: 56px !important;
+    border-radius: 0.75rem !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .btn-outline {
+    background: white !important;
+    border: 2px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+    font-weight: 600 !important;
+    min-height: 56px !important;
+    border-radius: 0.75rem !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Hover Effects for Touch Devices */
+  .hover-enhanced-lift:active {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Fix viewport issues */
+  body {
+    -webkit-text-size-adjust: 100% !important;
+    -ms-text-size-adjust: 100% !important;
+  }
+
+  /* Better select styling */
+  select {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 0.75rem !important;
+    padding-right: 3rem !important;
+  }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tablet-grid-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .tablet-grid-3 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .tablet-padding {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Desktop Enhancements */
+@media (min-width: 1025px) {
+  .hover-enhanced-lift:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+  .print-visible {
+    display: block !important;
+  }
+  .print-page-break {
+    page-break-before: always !important;
+  }
+  .print-no-break {
+    page-break-inside: avoid !important;
+  }
+}
+
+/* Additional mobile fixes */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* Better container handling */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    max-width: 100% !important;
+  }
+
+  /* Fix form container */
+  .booking-form-container {
+    padding: 1rem !important;
+    max-width: 100% !important;
+  }
+
+  /* Better spacing for cards */
+  .venue-info-card,
+  .booking-form-card,
+  .form-header {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Improved payment cards */
+  .payment-type-card,
+  .bank-option {
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Better total section */
+  .total-section {
+    padding: 1.5rem !important;
+  }
+
+  /* Success page improvements */
+  .success-container {
+    padding: 1rem !important;
+  }
+
+  .success-card {
+    padding: 2rem 1.5rem !important;
+  }
+
+  /* Form actions */
+  .form-actions {
+    padding-top: 1.5rem !important;
+    gap: 1rem !important;
+  }
+}

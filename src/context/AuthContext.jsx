@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
+import PropTypes from 'prop-types'
 import {
   onAuthStateChanged,
   signOut,
@@ -34,7 +35,6 @@ export const AuthProvider = ({ children }) => {
             setCurrentUser(user)
             setUserRole(userData.role)
           } else {
-            // Create new user document
             const newUserData = {
               email: user.email,
               name: user.displayName || user.email.split("@")[0],
@@ -47,7 +47,9 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.error("Error fetching user data:", error)
-          toast.error("Gagal memuat data user")
+          toast.error("Gagal memuat data user", {
+            duration: 2000,
+          })
         }
       } else {
         setCurrentUser(null)
@@ -59,30 +61,29 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe
   }, [])
 
-  // Login function
   const login = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       return result
     } catch (error) {
       console.error("Login error:", error)
+      toast.error("Login gagal", {
+        duration: 2000,
+      })
       throw error
     }
   }
 
-  // Signup function
   const signup = async (email, password, displayName) => {
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password)
 
-      // Update profile with display name
       if (displayName) {
         await updateProfile(result.user, {
           displayName: displayName,
         })
       }
 
-      // Create user document in Firestore
       await setDoc(doc(db, "users", result.user.uid), {
         email: email,
         name: displayName || email.split("@")[0],
@@ -93,29 +94,37 @@ export const AuthProvider = ({ children }) => {
       return result
     } catch (error) {
       console.error("Signup error:", error)
+      toast.error("Pendaftaran gagal", {
+        duration: 2000,
+      })
       throw error
     }
   }
 
-  // Google login function
   const loginWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider)
       return result
     } catch (error) {
       console.error("Google login error:", error)
+      toast.error("Login dengan Google gagal", {
+        duration: 2000,
+      })
       throw error
     }
   }
 
-  // Logout function
   const logout = async () => {
     try {
       await signOut(auth)
-      toast.success("Berhasil logout!")
+      toast.success("Berhasil logout!", {
+        duration: 2000,
+      })
     } catch (error) {
       console.error("Error logging out:", error)
-      toast.error("Gagal logout")
+      toast.error("Gagal logout", {
+        duration: 2000,
+      })
       throw error
     }
   }
@@ -131,4 +140,8 @@ export const AuthProvider = ({ children }) => {
   }
 
   return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>
+}
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired
 }

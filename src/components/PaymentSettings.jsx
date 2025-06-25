@@ -16,6 +16,7 @@ import {
   FaSpinner,
 } from "react-icons/fa"
 import toast from "react-hot-toast"
+import { useBackButton } from "../hooks/UseBackButton"
 
 const PaymentSettings = () => {
   const [paymentMethods, setPaymentMethods] = useState([])
@@ -31,6 +32,15 @@ const PaymentSettings = () => {
     bankName: "",
     instructions: "",
     isActive: true,
+  })
+
+  useBackButton(() => {
+    if (showModal) {
+      handleCloseModal()
+      return true
+    }
+    window.location.href = "/admin"
+    return true
   })
 
   useEffect(() => {
@@ -154,7 +164,6 @@ const PaymentSettings = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Metode Pembayaran</h2>
@@ -169,7 +178,6 @@ const PaymentSettings = () => {
         </button>
       </div>
 
-      {/* Payment Methods List */}
       <div className="space-y-4">
         {paymentMethods.map((method) => (
           <div
@@ -247,7 +255,6 @@ const PaymentSettings = () => {
         </div>
       )}
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg">

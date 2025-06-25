@@ -1,3 +1,5 @@
+@import "./styles/mobile-responsive.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,4 +75,86 @@
 
 .react-hot-toast {
   font-family: inherit;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  html,
+  body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Better touch targets */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Prevent zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Better modal handling */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+  }
+
+  /* Safe area handling for newer phones */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
 }

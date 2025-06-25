@@ -1,157 +1,153 @@
 "use client"
 
 import { useState } from "react"
+import PropTypes from "prop-types"
+import { signOut } from "firebase/auth"
+import { auth } from "../config/firebase"
 import { useAuth } from "../context/AuthContext"
-import { FaUser, FaSignOutAlt, FaHome, FaCalendarAlt, FaCog, FaBars, FaTimes, FaConciergeBell } from "react-icons/fa"
+import { FaUser, FaSignOutAlt, FaHome, FaChartBar, FaCalendarAlt } from "react-icons/fa"
+import toast from "react-hot-toast"
+import icon_hotel from "../assets/icon_hotel.png"
+import { useBackButton } from "../hooks/UseBackButton"
 
-const Header = ({ currentView, setCurrentView, userRole }) => {
-  const { currentUser, logout } = useAuth()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
+  const { currentUser } = useAuth()
+  const [showUserMenu, setShowUserMenu] = useState(false)
+
+  useBackButton(() => {
+    if (currentView !== "home") {
+      setCurrentView("home")
+      return true
+    }
+    return false
+  })
 
   const handleLogout = async () => {
     try {
-      await logout()
+      await signOut(auth)
+      toast.success("Logout berhasil!", { duration: 2000 })
       setCurrentView("home")
-      setIsMenuOpen(false)
     } catch (error) {
       console.error("Logout error:", error)
+      toast.error("Gagal logout", { duration: 2000 })
     }
   }
-
-  // Different navigation for admin vs customer
-  const getNavItems = () => {
-    if (!currentUser) {
-      return [{ id: "home", label: "Beranda", icon: FaHome }]
-    }
-
-    if (userRole === "admin") {
-      return [
-        { id: "home", label: "Beranda", icon: FaHome },
-        { id: "admin", label: "Admin Panel", icon: FaCog },
-      ]
-    }
-
-    // Customer navigation
-    return [
-      { id: "home", label: "Beranda", icon: FaHome },
-      { id: "services", label: "Pengajuan Layanan", icon: FaConciergeBell },
-      { id: "bookings", label: "Riwayat Booking", icon: FaCalendarAlt },
-    ]
-  }
-
-  const navItems = getNavItems()
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center cursor-pointer" onClick={() => setCurrentView("home")}>
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">GH</span>
+    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40 mobile-safe-area-top">
+      <div className="mobile-header">
+        <div className="flex justify-between items-center h-14 sm:h-16">
+          <div className="flex items-center space-x-2 sm:space-x-3 mobile-space-x-3 min-w-0 flex-1">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0">
+              <img
+                src={icon_hotel || "/placeholder.svg"}
+                alt="King Royal Hotel"
+                className="h-full w-full object-contain"
+              />
             </div>
-            <h1 className="ml-3 text-xl font-bold text-gray-900">Grand Hotel</h1>
+            <div className="min-w-0">
+              <h1 className="text-sm sm:text-lg mobile-text-sm font-bold text-gray-900 truncate">King Royal Hotel</h1>
+              <p className="text-xs mobile-text-xs text-gray-600 hidden sm:block">Venue Management System</p>
+            </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setCurrentView(item.id)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentView === item.id
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-
-          {/* User Menu */}
-          <div className="flex items-center space-x-4">
-            {currentUser ? (
-              <div className="flex items-center space-x-3">
-                {/* User Info */}
-                <div className="hidden sm:block text-right">
-                  <p className="text-sm font-medium text-gray-900">
-                    {currentUser.displayName || currentUser.email.split("@")[0]}
-                  </p>
-                  <p className="text-xs text-gray-500">{userRole === "admin" ? "Administrator" : "Customer"}</p>
-                </div>
-
-                {/* Profile Button */}
-                <button
-                  onClick={() => setCurrentView("profile")}
-                  className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
-                >
-                  <FaUser className="w-4 h-4 text-gray-600" />
-                </button>
-
-                {/* Logout Button */}
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                >
-                  <FaSignOutAlt className="w-4 h-4" />
-                  <span className="hidden sm:inline">Logout</span>
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setCurrentView("auth")}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium"
-              >
-                Masuk
-              </button>
-            )}
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-            >
-              {isMenuOpen ? <FaTimes className="w-5 h-5" /> : <FaBars className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
-            <nav className="space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon
-                return (
+          {currentUser ? (
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {userRole === "admin" && (
+                <div className="hidden sm:flex space-x-1 bg-gray-100 p-1 rounded-lg">
                   <button
-                    key={item.id}
-                    onClick={() => {
-                      setCurrentView(item.id)
-                      setIsMenuOpen(false)
-                    }}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      currentView === item.id
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    onClick={() => setCurrentView("home")}
+                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "home" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
+                    <FaHome className="text-xs sm:text-sm" />
+                    <span>Beranda</span>
                   </button>
-                )
-              })}
-            </nav>
-          </div>
-        )}
+                  <button
+                    onClick={() => setCurrentView("admin")}
+                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "admin" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    <FaChartBar className="text-xs sm:text-sm" />
+                    <span>Admin</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView("calendar")}
+                    className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "calendar" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    <FaCalendarAlt className="text-xs sm:text-sm" />
+                    <span>Kalender</span>
+                  </button>
+                </div>
+              )}
+
+              <div className="relative ml-2 sm:ml-4">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 sm:space-x-3 mobile-space-x-2 p-1 sm:p-2 mobile-p-2 rounded-xl hover:bg-gray-100 transition-colors mobile-touch-target"
+                >
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <FaUser className="text-white text-xs sm:text-sm mobile-text-xs" />
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm mobile-text-sm font-medium text-gray-900 truncate max-w-24">
+                      {currentUser.displayName || currentUser.email?.split("@")[0]}
+                    </p>
+                    <p className="text-xs mobile-text-xs text-gray-600 capitalize">{userRole}</p>
+                  </div>
+                </button>
+
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 mobile-py-2 z-50">
+                    <button
+                      onClick={() => {
+                        setCurrentView("profile")
+                        setShowUserMenu(false)
+                      }}
+                      className="w-full text-left px-4 py-2 mobile-px-4 mobile-py-2 text-sm mobile-text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 mobile-space-x-2 mobile-touch-target"
+                    >
+                      <FaUser className="text-gray-400 mobile-icon-sm" />
+                      <span>Profil</span>
+                    </button>
+                    <hr className="my-1" />
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        setShowUserMenu(false)
+                      }}
+                      className="w-full text-left px-4 py-2 mobile-px-4 mobile-py-2 text-sm mobile-text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 mobile-space-x-2 mobile-touch-target"
+                    >
+                      <FaSignOutAlt className="text-red-400 mobile-icon-sm" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setCurrentView("auth")}
+              className="bg-blue-500 text-white px-3 sm:px-4 mobile-px-4 py-2 mobile-py-2 rounded-xl hover:bg-blue-600 transition-colors font-medium text-sm mobile-text-sm mobile-button"
+            >
+              Masuk
+            </button>
+          )}
+        </div>
       </div>
+
+      {showUserMenu && <div className="fixed inset-0 z-30" onClick={() => setShowUserMenu(false)} />}
     </header>
   )
+}
+
+Header.propTypes = {
+  currentView: PropTypes.string.isRequired,
+  setCurrentView: PropTypes.func.isRequired,
+  userRole: PropTypes.string,
 }
 
 export default Header

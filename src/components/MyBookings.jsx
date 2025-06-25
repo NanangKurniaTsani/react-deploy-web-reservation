@@ -5,26 +5,27 @@ import { collection, query, where, getDocs, orderBy, doc, getDoc } from "firebas
 import { db } from "../config/firebase"
 import { useAuth } from "../context/AuthContext"
 import ReservationCard from "./ReservationCard"
-import {
-  FaSpinner,
-  FaCalendarAlt,
-  FaDownload,
-  FaCheckCircle,
-  FaSyncAlt,
-  FaMoneyBillWave,
-  FaSearch,
-  FaFilter,
-} from "react-icons/fa"
+import { FaSpinner, FaCalendarAlt, FaDownload, FaCheckCircle, FaSyncAlt, FaSearch, FaFilter } from "react-icons/fa"
 import toast from "react-hot-toast"
+import { useBackButton } from "../hooks/UseBackButton"
 
 const MyBookings = () => {
-  const { currentUser } = useAuth()
+  const { currentUser, userRole } = useAuth()
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedBooking, setSelectedBooking] = useState(null)
   const [showCard, setShowCard] = useState(false)
   const [filter, setFilter] = useState("all")
   const [searchTerm, setSearchTerm] = useState("")
+
+  useBackButton(() => {
+    if (showCard) {
+      setShowCard(false)
+      return true
+    }
+    window.location.href = "/dashboard"
+    return true
+  })
 
   useEffect(() => {
     if (currentUser) {
@@ -78,7 +79,6 @@ const MyBookings = () => {
       setBookings(bookingsData)
 
       if (bookingsData.length === 0) {
-        // Changed from toast.info to toast.success
         toast.success("Belum ada reservasi yang ditemukan")
       }
     } catch (error) {
@@ -165,17 +165,16 @@ const MyBookings = () => {
   }
 
   const filteredBookings = bookings.filter((booking) => {
-    // Filter by status
     if (filter !== "all" && booking.status !== filter) {
       return false
     }
 
-    // Filter by search term
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase()
       return (
         booking.eventName?.toLowerCase().includes(searchLower) ||
         booking.roomName?.toLowerCase().includes(searchLower) ||
+        booking.venueName?.toLowerCase().includes(searchLower) ||
         booking.status?.toLowerCase().includes(searchLower)
       )
     }
@@ -187,9 +186,7 @@ const MyBookings = () => {
     const total = bookings.length
     const pending = bookings.filter((b) => b.status === "pending").length
     const approved = bookings.filter((b) => b.status === "approved").length
-    const rejected = bookings.filter((b) => b.status === "rejected").length
-
-    return { total, pending, approved, rejected }
+    return { total, pending, approved }
   }
 
   const stats = getStats()
@@ -208,66 +205,52 @@ const MyBookings = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-6">
-        {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Reservasi Saya</h1>
-          <p className="text-gray-600">Kelola dan pantau status reservasi Anda</p>
+          <p className="text-gray-600">Kelola dan pantau status reservasi venue Anda</p>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-                <div className="text-sm text-gray-600">Total Reservasi</div>
+        {userRole !== "admin" && (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+                  <div className="text-sm text-gray-600">Total Reservasi</div>
+                </div>
+                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <FaCalendarAlt className="text-blue-600" />
+                </div>
               </div>
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <FaCalendarAlt className="text-blue-600" />
+            </div>
+
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
+                  <div className="text-sm text-gray-600">Menunggu</div>
+                </div>
+                <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <FaSyncAlt className="text-amber-600" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-bold text-emerald-600">{stats.approved}</div>
+                  <div className="text-sm text-gray-600">Disetujui</div>
+                </div>
+                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <FaCheckCircle className="text-emerald-600" />
+                </div>
               </div>
             </div>
           </div>
+        )}
 
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
-                <div className="text-sm text-gray-600">Menunggu</div>
-              </div>
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <FaSyncAlt className="text-amber-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-emerald-600">{stats.approved}</div>
-                <div className="text-sm text-gray-600">Disetujui</div>
-              </div>
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <FaCheckCircle className="text-emerald-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-red-500">{stats.rejected}</div>
-                <div className="text-sm text-gray-600">Ditolak</div>
-              </div>
-              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                <FaMoneyBillWave className="text-red-500" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
-          {/* Search */}
           <div className="flex-1 relative">
             <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
@@ -279,7 +262,6 @@ const MyBookings = () => {
             />
           </div>
 
-          {/* Filter */}
           <div className="flex items-center space-x-2">
             <FaFilter className="text-gray-400" />
             <select
@@ -290,19 +272,18 @@ const MyBookings = () => {
               <option value="all">Semua Status</option>
               <option value="pending">Menunggu</option>
               <option value="approved">Disetujui</option>
-              <option value="rejected">Ditolak</option>
+              {userRole === "admin" && <option value="rejected">Ditolak</option>}
             </select>
           </div>
         </div>
 
-        {/* Filter Tabs */}
         <div className="bg-white rounded-2xl p-2 mb-6 shadow-sm border border-gray-200">
           <div className="flex space-x-1">
             {[
               { id: "all", name: "Semua" },
               { id: "pending", name: "Menunggu" },
               { id: "approved", name: "Disetujui" },
-              { id: "rejected", name: "Ditolak" },
+              ...(userRole === "admin" ? [{ id: "rejected", name: "Ditolak" }] : []),
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -317,7 +298,6 @@ const MyBookings = () => {
           </div>
         </div>
 
-        {/* Bookings List */}
         {filteredBookings.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-200">
             <div className="text-6xl mb-4">📅</div>
@@ -326,7 +306,7 @@ const MyBookings = () => {
             </h3>
             <p className="text-gray-500 mb-6">
               {bookings.length === 0
-                ? "Anda belum memiliki reservasi. Mulai dengan membuat reservasi baru."
+                ? "Anda belum memiliki reservasi venue. Mulai dengan membuat reservasi baru."
                 : "Tidak ada reservasi dengan filter yang dipilih."}
             </p>
             {bookings.length === 0 && (
@@ -346,7 +326,7 @@ const MyBookings = () => {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">{booking.eventName}</h3>
-                      <p className="text-gray-600 text-sm">{booking.roomName}</p>
+                      <p className="text-gray-600 text-sm">{booking.roomName || booking.venueName}</p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span
@@ -392,7 +372,7 @@ const MyBookings = () => {
                     </div>
                   )}
 
-                  {booking.status === "rejected" && booking.rejectionReason && (
+                  {booking.status === "rejected" && booking.rejectionReason && userRole === "admin" && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                       <p className="text-sm text-red-700">
                         <span className="font-medium">Alasan Penolakan:</span> {booking.rejectionReason}
@@ -414,7 +394,6 @@ const MyBookings = () => {
           </div>
         )}
 
-        {/* Reservation Card Modal */}
         {showCard && selectedBooking && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">

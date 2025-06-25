@@ -4,8 +4,50 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hotel Booking System - Grand Hotel</title>
-    <meta name="description" content="Sistem Reservasi Acara Hotel " />
+    <title>King Royal Hotel - Venue Management</title>
+    <meta name="description" content="Sistem reservasi venue King Royal Hotel dengan fasilitas premium untuk acara istimewa Anda." />
+    <meta name="keywords" content="hotel, venue, reservasi, ballroom, meeting room, King Royal Hotel" />
+    <meta name="author" content="King Royal Hotel" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nanangkurniatsani.github.io/react-deploy-web-reservation/" />
+    <meta property="og:title" content="King Royal Hotel - Venue Management" />
+    <meta property="og:description" content="Sistem reservasi venue King Royal Hotel dengan fasilitas premium untuk acara istimewa Anda." />
+    <meta property="og:image" content="https://nanangkurniatsani.github.io/react-deploy-web-reservation/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://nanangkurniatsani.github.io/react-deploy-web-reservation/" />
+    <meta property="twitter:title" content="King Royal Hotel - Venue Management" />
+    <meta property="twitter:description" content="Sistem reservasi venue King Royal Hotel dengan fasilitas premium untuk acara istimewa Anda." />
+    <meta property="twitter:image" content="https://nanangkurniatsani.github.io/react-deploy-web-reservation/og-image.jpg" />
+
+    <!-- Content Security Policy - Updated untuk Firebase -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.gstatic.com https://securetoken.googleapis.com https://www.googleapis.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https: blob:;
+      connect-src 'self' https://identitytoolkit.googleapis.com https://firestore.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://firebase.googleapis.com https://fcm.googleapis.com wss://firestore.googleapis.com;
+      frame-src 'self' https://accounts.google.com https://nanangkurniatsani.github.io https://reservasihotel-593a2.firebaseapp.com;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      upgrade-insecure-requests;
+    " />
+
+    <!-- Preconnect untuk performa -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" />
+    <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#3B82F6" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
     <div id="root"></div>
