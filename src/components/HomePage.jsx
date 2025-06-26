@@ -346,7 +346,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Customer Tabs Content */}
       {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
       {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard userRole={userRole} />}
     </div>
