@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
-  // ✅ Jangan pakai subfolder jika deploy di root
   base: '/',
   plugins: [react()],
   resolve: {

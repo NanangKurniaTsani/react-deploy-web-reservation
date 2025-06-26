@@ -26,16 +26,6 @@ const HomePage = () => {
   const [userBookings, setUserBookings] = useState([])
   const [venueToBook, setVenueToBook] = useState(null)
 
-  useBackButton(() => {
-    if (showDetailModal) {
-      setShowDetailModal(false)
-    } else if (venueToBook) {
-      setVenueToBook(null)
-    } else if (activeTab !== "beranda") {
-      setActiveTab("beranda")
-    }
-  })
-
   const kingRoyalVenues = [
     {
       docId: "santorini-ballroom",
@@ -45,23 +35,12 @@ const HomePage = () => {
       capacity: 250,
       price: 5000000,
       description: "Ballroom mewah dengan kapasitas besar, dilengkapi dengan fasilitas premium untuk acara pernikahan, gala dinner, dan event besar lainnya.",
-      amenities: [
-        "Sound System Premium",
-        "Lighting Professional",
-        "AC Central",
-        "Catering Kitchen",
-        "WiFi High Speed",
-        "Proyektor 4K",
-        "Stage Besar",
-        "Chandelier Kristal",
-        "Lantai Marmer",
-        "Backdrop LED",
-      ],
+      amenities: ["Sound System Premium", "Lighting Professional", "AC Central", "Catering Kitchen", "WiFi High Speed", "Proyektor 4K", "Stage Besar", "Chandelier Kristal", "Lantai Marmer", "Backdrop LED"],
       imageUrl: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500&h=300&fit=crop",
       images: [
         "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500&h=300&fit=crop",
         "https://images.unsplash.com/photo-1464366400600-48f60103fc96?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop"
       ],
       available: true,
       rating: 4.9,
@@ -69,7 +48,7 @@ const HomePage = () => {
       setupOptions: [
         { type: "clash-room", capacity: 175, label: "Clash Room - 175 pax" },
         { type: "round", capacity: 125, label: "Round Table - 125 pax" },
-        { type: "theater", capacity: 250, label: "Theater Style - 250 pax" },
+        { type: "theater", capacity: 250, label: "Theater Style - 250 pax" }
       ],
     },
     {
@@ -80,22 +59,12 @@ const HomePage = () => {
       capacity: 35,
       price: 2000000,
       description: "Ruang meeting modern dengan teknologi terdepan, ideal untuk presentasi bisnis, workshop, dan meeting corporate.",
-      amenities: [
-        "Smart TV 65 inch",
-        "Video Conference",
-        "Whiteboard Digital",
-        "AC",
-        "WiFi Gratis",
-        "Coffee Station",
-        "Ergonomic Chairs",
-        "Wireless Presentation",
-        "Flipchart",
-      ],
+      amenities: ["Smart TV 65 inch", "Video Conference", "Whiteboard Digital", "AC", "WiFi Gratis", "Coffee Station", "Ergonomic Chairs", "Wireless Presentation", "Flipchart"],
       imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
       images: [
         "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
         "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1582653291997-079a1c04e5a1?w=500&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1582653291997-079a1c04e5a1?w=500&h=300&fit=crop"
       ],
       available: true,
       rating: 4.8,
@@ -104,75 +73,7 @@ const HomePage = () => {
         { type: "clash-room", capacity: 25, label: "Clash Room - 25 pax" },
         { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
         { type: "round", capacity: 10, label: "Round Table - 10 pax" },
-        { type: "theater", capacity: 35, label: "Theater Style - 35 pax" },
-      ],
-    },
-    {
-      docId: "barcelona-meeting-room",
-      id: "barcelona-meeting-room",
-      name: "Barcelona Meeting Room",
-      category: "meeting",
-      capacity: 50,
-      price: 2000000,
-      description: "Meeting room dengan kapasitas sedang, dilengkapi fasilitas modern untuk produktivitas maksimal.",
-      amenities: [
-        "Proyektor HD",
-        "Sound System",
-        "AC",
-        "WiFi Gratis",
-        "Flipchart",
-        "Coffee Break Area",
-        "Natural Lighting",
-        "Acoustic Design",
-        "Modular Seating",
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
-      ],
-      available: true,
-      rating: 4.7,
-      reviews: 64,
-      setupOptions: [
-        { type: "clash-room", capacity: 30, label: "Clash Room - 30 pax" },
-        { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
-        { type: "round", capacity: 10, label: "Round Table - 10 pax" },
-        { type: "theater", capacity: 50, label: "Theater Style - 50 pax" },
-      ],
-    },
-    {
-      docId: "mellizo-room",
-      id: "mellizo-room",
-      name: "Mellizo Room",
-      category: "meeting",
-      capacity: 50,
-      price: 2000000,
-      description: "Ruang meeting intimate untuk diskusi tim kecil dan brainstorming session.",
-      amenities: [
-        "LED TV",
-        "Wireless Presentation",
-        "AC",
-        "WiFi",
-        "Comfortable Seating",
-        "Tea & Coffee",
-        "Brainstorming Wall",
-        "Creative Lighting",
-        "Cozy Atmosphere",
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
-      ],
-      available: true,
-      rating: 4.6,
-      reviews: 38,
-      setupOptions: [
-        { type: "clash-room", capacity: 30, label: "Clash Room - 30 pax" },
-        { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
-        { type: "round", capacity: 10, label: "Round Table - 10 pax" },
-        { type: "theater", capacity: 50, label: "Theater Style - 50 pax" },
+        { type: "theater", capacity: 35, label: "Theater Style - 35 pax" }
       ],
     },
     {
@@ -183,23 +84,12 @@ const HomePage = () => {
       capacity: 125,
       price: 3000000,
       description: "Area kolam renang yang sempurna untuk acara outdoor, pool party, dan gathering santai.",
-      amenities: [
-        "Pool Access",
-        "Outdoor Seating",
-        "BBQ Area",
-        "Sound System Outdoor",
-        "Lighting",
-        "Gazebo",
-        "Pool Deck",
-        "Lounge Chairs",
-        "Umbrella Tables",
-        "Poolside Bar",
-      ],
+      amenities: ["Pool Access", "Outdoor Seating", "BBQ Area", "Sound System Outdoor", "Lighting", "Gazebo", "Pool Deck", "Lounge Chairs", "Umbrella Tables", "Poolside Bar"],
       imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=300&fit=crop",
       images: [
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=300&fit=crop",
         "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop"
       ],
       available: true,
       rating: 4.8,
@@ -208,42 +98,20 @@ const HomePage = () => {
         { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
         { type: "round-large", capacity: 125, label: "Round Large - 125 pax" },
         { type: "round-small", capacity: 25, label: "Round Small - 25 pax" },
-        { type: "cocktail", capacity: 10, label: "Cocktail Setup - 10 pax" },
+        { type: "cocktail", capacity: 10, label: "Cocktail Setup - 10 pax" }
       ],
-    },
-    {
-      docId: "basement-terrace",
-      id: "basement-terrace",
-      name: "Basement Terrace",
-      category: "outdoor",
-      capacity: 50,
-      price: 2500000,
-      description: "Teras basement yang nyaman untuk acara outdoor intimate dengan suasana yang tenang.",
-      amenities: [
-        "Outdoor Furniture",
-        "Garden View",
-        "Sound System",
-        "Lighting Ambient",
-        "WiFi",
-        "Refreshment Area",
-        "Natural Ventilation",
-        "Garden Decoration",
-        "Privacy Screen",
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&h=300&fit=crop",
-      ],
-      available: true,
-      rating: 4.7,
-      reviews: 56,
-      setupOptions: [
-        { type: "garden", capacity: 50, label: "Garden Style - 50 pax" },
-        { type: "cocktail", capacity: 30, label: "Cocktail Setup - 30 pax" },
-      ],
-    },
+    }
   ]
+
+  useBackButton(() => {
+    if (showDetailModal) {
+      setShowDetailModal(false)
+    } else if (venueToBook) {
+      setVenueToBook(null)
+    } else if (activeTab !== "beranda") {
+      setActiveTab("beranda")
+    }
+  })
 
   const fetchUserBookings = async () => {
     if (!currentUser) return
@@ -265,10 +133,7 @@ const HomePage = () => {
   useEffect(() => {
     setVenues(kingRoyalVenues)
     setLoading(false)
-
-    if (currentUser) {
-      fetchUserBookings()
-    }
+    if (currentUser) fetchUserBookings()
   }, [currentUser])
 
   useEffect(() => {
@@ -286,7 +151,7 @@ const HomePage = () => {
       filtered = filtered.filter(
         (venue) =>
           venue.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          venue.description?.toLowerCase().includes(searchTerm.toLowerCase()),
+          venue.description?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -324,10 +189,10 @@ const HomePage = () => {
   }
 
   return (
-    <div className="home-page home-page-container home-page-responsive min-h-screen bg-gray-50 mobile-safe-area">
+    <div className="min-h-screen bg-gray-50">
       {venueToBook && (
-        <div className="home-page-booking-modal home-page-booking-modal-overlay home-page-booking-modal-responsive fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 mobile-p-4">
-          <div className="home-page-booking-modal-content home-page-booking-modal-content-responsive bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <BookingForm
               selectedRoom={venueToBook}
               onSuccess={() => {
@@ -346,10 +211,10 @@ const HomePage = () => {
       )}
 
       {userRole !== "admin" && (
-        <div className="home-page-tabs home-page-tabs-container home-page-tabs-responsive bg-white shadow-sm mobile-safe-area-top">
-          <div className="home-page-tabs-content home-page-tabs-content-responsive container mx-auto px-4 mobile-px-4">
-            <div className="home-page-tabs-nav home-page-tabs-nav-responsive flex justify-center py-4 mobile-py-4">
-              <div className="home-page-tabs-wrapper home-page-tabs-wrapper-responsive flex space-x-1 bg-gray-100 p-1 rounded-lg mobile-tabs">
+        <div className="bg-white shadow-sm">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center py-4">
+              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => handleTabChange("beranda")}
                   className={`px-4 py-1 rounded-md text-xs font-medium transition-colors ${
@@ -385,10 +250,10 @@ const HomePage = () => {
       )}
 
       {(activeTab === "beranda" || userRole === "admin") && (
-        <div className="home-page-main home-page-main-container home-page-main-responsive container mx-auto px-4 py-8 mobile-px-4 mobile-py-6">
-          <div className="home-page-header home-page-header-container home-page-header-responsive text-center mb-8 mobile-mb-6">
-            <div className="home-page-search home-page-search-container home-page-search-responsive max-w-md mx-auto mb-6 mobile-mb-6">
-              <div className="home-page-search-wrapper home-page-search-wrapper-responsive relative">
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-8">
+              <div className="relative max-w-md mx-auto mb-6">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
@@ -398,50 +263,47 @@ const HomePage = () => {
                   className="w-full pl-10 pr-4 py-2 bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-            </div>
 
-            <div className="home-page-filters home-page-filters-container home-page-filters-responsive flex justify-center mb-8 mobile-mb-6">
-              <div className="home-page-filters-wrapper home-page-filters-wrapper-responsive flex gap-2 overflow-x-auto">
-                <button
-                  onClick={() => setSelectedCategory("all")}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border ${
-                    selectedCategory === "all" 
-                      ? "bg-blue-500 text-white border-blue-500" 
-                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                  }`}
-                >
-                  Semua Venue
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("ballroom")}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border ${
-                    selectedCategory === "ballroom"
-                      ? "bg-blue-500 text-white border-blue-500"
-                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                  }`}
-                >
-                  Ballroom
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("meeting")}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border ${
-                    selectedCategory === "meeting"
-                      ? "bg-blue-500 text-white border-blue-500"
-                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                  }`}
-                >
-                  Meeting Room
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("outdoor")}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border ${
-                    selectedCategory === "outdoor"
-                      ? "bg-blue-500 text-white border-blue-500"
-                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                  }`}
-                >
-                  Outdoor
-                </button>
+              <div className="flex justify-center">
+                <div className="w-full max-w-md md:max-w-full">
+                  <div className="hidden md:flex justify-center gap-2 mb-4">
+                    {["all", "ballroom", "meeting", "outdoor"].map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => setSelectedCategory(category)}
+                        className={`px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap border ${
+                          selectedCategory === category
+                            ? "bg-blue-500 text-white border-blue-500"
+                            : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
+                        }`}
+                      >
+                        {category === "all" ? "Semua Venue" : 
+                         category === "ballroom" ? "Ballroom" :
+                         category === "meeting" ? "Meeting Room" : "Outdoor"}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="md:hidden overflow-x-auto pb-2">
+                    <div className="flex gap-2 w-max px-4">
+                      {["all", "ballroom", "meeting", "outdoor"].map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => setSelectedCategory(category)}
+                          className={`px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap border flex-shrink-0 ${
+                            selectedCategory === category
+                              ? "bg-blue-500 text-white border-blue-500"
+                              : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
+                          }`}
+                        >
+                          {category === "all" ? "Semua Venue" : 
+                           category === "ballroom" ? "Ballroom" :
+                           category === "meeting" ? "Meeting Room" : "Outdoor"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -449,10 +311,7 @@ const HomePage = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse"
-                >
+                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
                   <div className="h-48 bg-gray-200"></div>
                   <div className="p-4 space-y-3">
                     <div className="h-5 bg-gray-200 rounded w-3/4"></div>

@@ -1225,3 +1225,16 @@
     display: none;
   }
 }
+/* Untuk browser yang membutuhkan webkit prefix */
+::-webkit-scrollbar {
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
