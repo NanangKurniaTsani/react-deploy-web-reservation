@@ -62,8 +62,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                 <div className="header-nav header-nav-container header-nav-responsive hidden sm:flex space-x-1 bg-gray-100 p-1 rounded-lg">
                   <button
                     onClick={() => setCurrentView("home")}
-                    className={`header-nav-btn header-nav-btn-home header-nav-btn-responsive px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
-                      currentView === "home" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                    className={`header-nav-btn header-nav-btn-home header-nav-btn-responsive px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "home" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     <FaHome className="header-nav-icon header-nav-icon-responsive text-xs sm:text-sm" />
@@ -71,8 +71,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                   </button>
                   <button
                     onClick={() => setCurrentView("admin")}
-                    className={`header-nav-btn header-nav-btn-admin header-nav-btn-responsive px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
-                      currentView === "admin" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                    className={`header-nav-btn header-nav-btn-admin header-nav-btn-responsive px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     <FaChartBar className="header-nav-icon header-nav-icon-responsive text-xs sm:text-sm" />
@@ -80,8 +80,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                   </button>
                   <button
                     onClick={() => setCurrentView("calendar")}
-                    className={`header-nav-btn header-nav-btn-calendar header-nav-btn-responsive px-3 py-1 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
-                      currentView === "calendar" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                    className={`header-nav-btn header-nav-btn-calendar header-nav-btn-responsive px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm font-medium flex items-center space-x-1 sm:space-x-2 ${
+                      currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                     }`}
                   >
                     <FaCalendarAlt className="header-nav-icon header-nav-icon-responsive text-xs sm:text-sm" />
@@ -95,8 +95,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                 <div className="header-mobile-nav header-mobile-nav-container header-mobile-nav-responsive sm:hidden flex space-x-1 bg-gray-100 p-1 rounded-lg mr-2">
                   <button
                     onClick={() => setCurrentView("home")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-home header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
-                      currentView === "home" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-home header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "home" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaHome className="text-xs" />
@@ -104,8 +104,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                   </button>
                   <button
                     onClick={() => setCurrentView("admin")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-admin header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
-                      currentView === "admin" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-admin header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaChartBar className="text-xs" />
@@ -113,8 +113,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                   </button>
                   <button
                     onClick={() => setCurrentView("calendar")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-calendar header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
-                      currentView === "calendar" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-calendar header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaCalendarAlt className="text-xs" />

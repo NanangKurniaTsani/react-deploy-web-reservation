@@ -174,11 +174,11 @@ const HomePage = () => {
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
-              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+              <div className="flex space-x-1 bg-gray-100 p-0.5 rounded-lg">
                 <button
                   onClick={() => handleTabChange("beranda")}
-                  className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                    activeTab === "beranda" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                    activeTab === "beranda" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
                   Beranda
@@ -187,18 +187,16 @@ const HomePage = () => {
                   <>
                     <button
                       onClick={() => handleTabChange("reservasi")}
-                      className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                        activeTab === "reservasi"
-                          ? "bg-white shadow text-blue-600"
-                          : "text-gray-600 hover:text-gray-900"
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                        activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
                       Reservasi Saya
                     </button>
                     <button
                       onClick={() => handleTabChange("kalender")}
-                      className={`px-6 py-2 rounded-md font-medium transition-colors ${
-                        activeTab === "kalender" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                        activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
                       Kalender
@@ -232,10 +230,10 @@ const HomePage = () => {
             </div>
 
             <div className="flex justify-center mb-8">
-              <div className="inline-flex rounded-lg p-1 shadow-sm border border-gray-200 overflow-x-auto">
+              <div className="flex flex-wrap justify-center gap-2">
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "all" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -243,7 +241,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("ballroom")}
-                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "ballroom" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -251,7 +249,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("meeting")}
-                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "meeting" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -259,7 +257,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("outdoor")}
-                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "outdoor" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -346,6 +344,7 @@ const HomePage = () => {
         </div>
       )}
 
+      {/* Customer Tabs Content */}
       {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
       {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard userRole={userRole} />}
     </div>
