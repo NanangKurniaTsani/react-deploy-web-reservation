@@ -123,16 +123,16 @@ const CalendarDashboard = ({ userRole = "customer" }) => {
 
   const getDayClasses = (status) => {
     const baseClasses =
-      "calendar-day calendar-day-base calendar-day-responsive w-full h-12 flex items-center justify-center text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer calendar-touch-target"
+      "w-full h-12 flex items-center justify-center text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer"
     switch (status) {
       case "empty":
-        return `${baseClasses} calendar-day-empty invisible`
+        return `${baseClasses} invisible`
       case "past":
-        return `${baseClasses} calendar-day-past bg-gray-100 text-gray-400 cursor-not-allowed`
+        return `${baseClasses} bg-gray-100 text-gray-400 cursor-not-allowed`
       case "booked":
-        return `${baseClasses} calendar-day-booked bg-red-100 text-red-700 border-2 border-red-300 hover:bg-red-200`
+        return `${baseClasses} bg-red-100 text-red-700 border-2 border-red-300 hover:bg-red-200`
       case "available":
-        return `${baseClasses} calendar-day-available bg-green-100 text-green-700 border-2 border-green-300 hover:bg-green-200`
+        return `${baseClasses} bg-green-100 text-green-700 border-2 border-green-300 hover:bg-green-200`
       default:
         return baseClasses
     }
@@ -164,77 +164,84 @@ const CalendarDashboard = ({ userRole = "customer" }) => {
 
   if (loading) {
     return (
-      <div className="calendar-loading calendar-loading-container calendar-loading-responsive flex items-center justify-center py-12 mobile-loading">
-        <FaSpinner className="calendar-loading-spinner animate-spin text-4xl mobile-text-2xl text-blue-500" />
+      <div className="flex items-center justify-center py-12">
+        <FaSpinner className="animate-spin text-4xl text-blue-500" />
       </div>
     )
   }
 
   return (
-    <div className="calendar-dashboard calendar-dashboard-container calendar-dashboard-responsive space-y-6 mobile-space-y-6">
-      <div className="calendar-header calendar-header-card calendar-header-responsive bg-white rounded-2xl p-6 mobile-p-4 shadow-sm border border-gray-200 mobile-card">
-        <div className="calendar-header-content calendar-header-flex calendar-header-mobile flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mobile-space-y-4 sm:space-y-0">
-          <div className="calendar-header-info calendar-header-text-section">
-            <h2 className="calendar-title calendar-title-responsive text-2xl mobile-text-xl font-bold text-gray-900 mb-2 mobile-mb-4">
-              <FaCalendarAlt className="calendar-icon calendar-icon-responsive inline mr-3 text-blue-600 mobile-icon-base" />
+    <div className="space-y-6 p-4">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <FaCalendarAlt className="inline mr-3 text-blue-600" />
               Kalender Reservasi
             </h2>
-            <p className="calendar-subtitle calendar-subtitle-responsive text-gray-600 mobile-text-sm">
+            <p className="text-gray-600">
               {userRole === "admin" ? "Lihat semua reservasi yang disetujui" : "Lihat reservasi Anda"}
             </p>
           </div>
-         <div className="venue-filter venue-filter-container venue-filter-responsive flex items-center space-x-2 mobile-space-x-2">
-  <FaFilter className="venue-filter-icon venue-filter-icon-responsive text-gray-400 mobile-icon-sm" />
-  <select
-    value={selectedVenue}
-    onChange={(e) => setSelectedVenue(e.target.value)}
-    className="venue-filter-select venue-filter-select-responsive px-4 py-2 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <option value="" disabled hidden>
-      Semua Venue
-    </option>
-    <option value="all">Tampilkan Semua</option>
-    {venues.map((venue) => (
-      <option key={venue.id} value={venue.id}>
-        {venue.name}
-      </option>
-    ))}
-  </select>
-</div>
+          <div className="flex items-center space-x-2">
+            <FaFilter className="text-gray-400" />
+            <select
+              value={selectedVenue}
+              onChange={(e) => setSelectedVenue(e.target.value)}
+              className="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled hidden>
+                Semua Venue
+              </option>
+              <option value="all">Tampilkan Semua</option>
+              {venues.map((venue) => (
+                <option key={venue.id} value={venue.id}>
+                  {venue.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      <div className="calendar-container calendar-main-container calendar-main-responsive bg-white rounded-2xl p-6 mobile-p-4 shadow-sm border border-gray-200 mobile-card">
-        <div className="calendar-nav calendar-nav-container calendar-nav-responsive flex items-center justify-between mb-6 mobile-mb-4">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+        <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => navigateMonth(-1)}
-            className="nav-button nav-button-prev nav-button-responsive px-4 py-2 mobile-button-small bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors mobile-touch-target"
+            className="px-4 py-2 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors"
           >
             ← Sebelumnya
           </button>
-          <h3 className="month-title month-title-responsive text-xl mobile-text-lg font-bold text-gray-900">
-            {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-          </h3>
+          
+          <div className="flex flex-col items-center mx-2 sm:mx-4">
+            <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">
+              {monthNames[currentMonth.getMonth()]}
+            </h3>
+            <span className="text-gray-600 text-sm sm:text-base">
+              {currentMonth.getFullYear()}
+            </span>
+          </div>
+          
           <button
             onClick={() => navigateMonth(1)}
-            className="nav-button nav-button-next nav-button-responsive px-4 py-2 mobile-button-small bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors mobile-touch-target"
+            className="px-4 py-2 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors"
           >
             Selanjutnya →
           </button>
         </div>
 
-        <div className="calendar-grid calendar-header-grid calendar-header-grid-responsive grid grid-cols-7 gap-2 mobile-grid-7 mb-4 mobile-mb-4">
+        <div className="grid grid-cols-7 gap-2 mb-4">
           {dayNames.map((day) => (
             <div
               key={day}
-              className="day-header day-header-cell day-header-responsive text-center font-semibold text-gray-600 py-2 mobile-py-2 mobile-text-sm"
+              className="text-center font-semibold text-gray-600 py-2"
             >
               {day}
             </div>
           ))}
         </div>
 
-        <div className="calendar-grid calendar-days-grid calendar-days-grid-responsive grid grid-cols-7 gap-2 mobile-grid-7">
+        <div className="grid grid-cols-7 gap-2">
           {getDaysInMonth(currentMonth).map((date, index) => {
             const status = getDayStatus(date)
             const booking = getBookingForDate(date)
@@ -246,11 +253,11 @@ const CalendarDashboard = ({ userRole = "customer" }) => {
               >
                 {date && (
                   <>
-                    <span className="day-number day-number-text day-number-responsive mobile-text-sm">
+                    <span className="text-sm">
                       {date.getDate()}
                     </span>
                     {booking && (
-                      <div className="booking-indicator booking-indicator-dot booking-indicator-responsive w-2 h-2 bg-red-500 rounded-full ml-1"></div>
+                      <div className="w-2 h-2 bg-red-500 rounded-full ml-1"></div>
                     )}
                   </>
                 )}
@@ -259,20 +266,20 @@ const CalendarDashboard = ({ userRole = "customer" }) => {
           })}
         </div>
 
-        <div className="calendar-legend calendar-legend-container calendar-legend-responsive flex flex-wrap items-center justify-center gap-6 mobile-grid-3 mt-6 mobile-mt-4 pt-6 mobile-pt-4 border-t border-gray-200">
-          <div className="legend-item legend-item-available legend-item-responsive flex items-center space-x-2 mobile-space-x-2">
-            <div className="legend-color legend-color-available legend-color-responsive w-4 h-4 bg-green-100 border-2 border-green-300 rounded"></div>
-            <span className="legend-text legend-text-responsive text-sm mobile-text-xs text-gray-600">Tersedia</span>
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-green-100 border-2 border-green-300 rounded"></div>
+            <span className="text-sm text-gray-600">Tersedia</span>
           </div>
-          <div className="legend-item legend-item-booked legend-item-responsive flex items-center space-x-2 mobile-space-x-2">
-            <div className="legend-color legend-color-booked legend-color-responsive w-4 h-4 bg-red-100 border-2 border-red-300 rounded"></div>
-            <span className="legend-text legend-text-responsive text-sm mobile-text-xs text-gray-600">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-red-100 border-2 border-red-300 rounded"></div>
+            <span className="text-sm text-gray-600">
               Sudah Dipesan
             </span>
           </div>
-          <div className="legend-item legend-item-past legend-item-responsive flex items-center space-x-2 mobile-space-x-2">
-            <div className="legend-color legend-color-past legend-color-responsive w-4 h-4 bg-gray-100 rounded"></div>
-            <span className="legend-text legend-text-responsive text-sm mobile-text-xs text-gray-600">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-gray-100 rounded"></div>
+            <span className="text-sm text-gray-600">
               Tanggal Lalu
             </span>
           </div>
@@ -281,12 +288,10 @@ const CalendarDashboard = ({ userRole = "customer" }) => {
     </div>
   )
 }
+
 CalendarDashboard.propTypes = {
   userRole: PropTypes.oneOf(["admin", "customer"]),
 }
 
-CalendarDashboard.defaultProps = {
-  userRole: "customer",
-}
 
 export default CalendarDashboard
