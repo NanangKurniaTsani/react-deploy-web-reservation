@@ -5,13 +5,13 @@ import { useAuth } from "../context/AuthContext"
 import { useBackButton } from "../hooks/UseBackButton.js"
 import VenueCard from "./VenueCard"
 import VenueDetailModal from "./VenueDetailModal"
-import BookingForm from "./BookingForm.jsx"
-import { FaSearch } from "react-icons/fa"
-import toast from "react-hot-toast"
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore"
-import { db } from "../config/firebase"
+import BookingForm from "./BookingForm"
 import MyBookings from "./MyBookings"
 import CalendarDashboard from "./CalendarDashboard"
+import { FaSearch } from "react-icons/fa"
+import toast from "react-hot-toast"
+import { collection, onSnapshot } from "firebase/firestore"
+import { db } from "../config/firebase"
 
 const HomePage = () => {
   const { currentUser, userRole } = useAuth()
@@ -22,87 +22,10 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedVenue, setSelectedVenue] = useState(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
-  const [activeTab, setActiveTab] = useState(userRole === "admin" ? "admin" : "beranda")
-  const [userBookings, setUserBookings] = useState([])
   const [venueToBook, setVenueToBook] = useState(null)
+  const [activeTab, setActiveTab] = useState("beranda")
 
-  const kingRoyalVenues = [
-    {
-      docId: "santorini-ballroom",
-      id: "santorini-ballroom",
-      name: "Santorini Ballroom",
-      category: "ballroom",
-      capacity: 250,
-      price: 5000000,
-      description: "Ballroom mewah dengan kapasitas besar, dilengkapi dengan fasilitas premium untuk acara pernikahan, gala dinner, dan event besar lainnya.",
-      amenities: ["Sound System Premium", "Lighting Professional", "AC Central", "Catering Kitchen", "WiFi High Speed", "Proyektor 4K", "Stage Besar", "Chandelier Kristal", "Lantai Marmer", "Backdrop LED"],
-      imageUrl: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1464366400600-48f60103fc96?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop"
-      ],
-      available: true,
-      rating: 4.9,
-      reviews: 127,
-      setupOptions: [
-        { type: "clash-room", capacity: 175, label: "Clash Room - 175 pax" },
-        { type: "round", capacity: 125, label: "Round Table - 125 pax" },
-        { type: "theater", capacity: 250, label: "Theater Style - 250 pax" }
-      ],
-    },
-    {
-      docId: "venice-meeting-room",
-      id: "venice-meeting-room",
-      name: "Venice Meeting Room",
-      category: "meeting",
-      capacity: 35,
-      price: 2000000,
-      description: "Ruang meeting modern dengan teknologi terdepan, ideal untuk presentasi bisnis, workshop, dan meeting corporate.",
-      amenities: ["Smart TV 65 inch", "Video Conference", "Whiteboard Digital", "AC", "WiFi Gratis", "Coffee Station", "Ergonomic Chairs", "Wireless Presentation", "Flipchart"],
-      imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1582653291997-079a1c04e5a1?w=500&h=300&fit=crop"
-      ],
-      available: true,
-      rating: 4.8,
-      reviews: 89,
-      setupOptions: [
-        { type: "clash-room", capacity: 25, label: "Clash Room - 25 pax" },
-        { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
-        { type: "round", capacity: 10, label: "Round Table - 10 pax" },
-        { type: "theater", capacity: 35, label: "Theater Style - 35 pax" }
-      ],
-    },
-    {
-      docId: "swimming-pool-area",
-      id: "swimming-pool-area",
-      name: "Swimming Pool Area",
-      category: "outdoor",
-      capacity: 125,
-      price: 3000000,
-      description: "Area kolam renang yang sempurna untuk acara outdoor, pool party, dan gathering santai.",
-      amenities: ["Pool Access", "Outdoor Seating", "BBQ Area", "Sound System Outdoor", "Lighting", "Gazebo", "Pool Deck", "Lounge Chairs", "Umbrella Tables", "Poolside Bar"],
-      imageUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=300&fit=crop",
-      images: [
-        "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&h=300&fit=crop",
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop"
-      ],
-      available: true,
-      rating: 4.8,
-      reviews: 92,
-      setupOptions: [
-        { type: "u-shape", capacity: 20, label: "U Shape - 20 pax" },
-        { type: "round-large", capacity: 125, label: "Round Large - 125 pax" },
-        { type: "round-small", capacity: 25, label: "Round Small - 25 pax" },
-        { type: "cocktail", capacity: 10, label: "Cocktail Setup - 10 pax" }
-      ],
-    }
-  ]
-
+  // Implementasi useBackButton
   useBackButton(() => {
     if (showDetailModal) {
       setShowDetailModal(false)
@@ -113,32 +36,76 @@ const HomePage = () => {
     }
   })
 
-  const fetchUserBookings = async () => {
-    if (!currentUser) return
-
+  // Setup real-time listener for venues
+  const setupVenuesListener = () => {
     try {
-      const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid), orderBy("createdAt", "desc"))
-      const querySnapshot = await getDocs(q)
-      const bookingsData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-      setUserBookings(bookingsData)
+      const venuesRef = collection(db, "venues")
+      const unsubscribe = onSnapshot(
+        venuesRef,
+        (snapshot) => {
+          console.log("Venues snapshot received, docs count:", snapshot.docs.length)
+
+          const venuesFromDB = snapshot.docs.map((doc) => {
+            const data = doc.data()
+            console.log("Venue data from Firestore:", data)
+            return {
+              id: doc.id,
+              docId: doc.id,
+              ...data,
+              // Pastikan semua field ada dengan default values
+              name: data.name || "Unnamed Venue",
+              category: data.category || "meeting",
+              capacity: data.capacity || 50,
+              price: data.price || 1000000,
+              description: data.description || "Venue description not available",
+              available: data.available !== undefined ? data.available : true,
+              rating: data.rating || 4.5,
+              reviews: data.reviews || 0,
+              amenities: data.amenities || [],
+              images: data.images || [],
+              imageUrl: data.imageUrl || "",
+            }
+          })
+
+          console.log("Processed venues from Firestore:", venuesFromDB)
+          setVenues(venuesFromDB)
+          setLoading(false)
+        },
+        (error) => {
+          console.error("Error in venues listener:", error)
+          toast.error("Gagal memuat data venue")
+          setVenues([])
+          setLoading(false)
+        },
+      )
+
+      return unsubscribe
     } catch (error) {
-      console.error("Error fetching bookings:", error)
-      toast.error("Gagal memuat data reservasi")
+      console.error("Error setting up venues listener:", error)
+      toast.error("Gagal menghubungkan ke database")
+      setVenues([])
+      setLoading(false)
+      return null
     }
   }
 
   useEffect(() => {
-    setVenues(kingRoyalVenues)
-    setLoading(false)
-    if (currentUser) fetchUserBookings()
-  }, [currentUser])
+    console.log("Setting up venues listener...")
+    const unsubscribe = setupVenuesListener()
+
+    // Cleanup listener on unmount
+    return () => {
+      if (unsubscribe) {
+        console.log("Cleaning up venues listener")
+        unsubscribe()
+      }
+    }
+  }, [])
 
   useEffect(() => {
+    console.log("Filtering venues, total venues:", venues.length)
     filterVenues()
-  }, [venues, selectedCategory, searchTerm, userBookings])
+  }, [venues, selectedCategory, searchTerm])
 
   const filterVenues = () => {
     let filtered = venues
@@ -151,19 +118,11 @@ const HomePage = () => {
       filtered = filtered.filter(
         (venue) =>
           venue.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          venue.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          venue.description?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
 
-    filtered = filtered.map((venue) => {
-      const venueBooking = userBookings.find((booking) => booking.venueId === venue.id)
-      return {
-        ...venue,
-        bookingStatus: venueBooking?.status || null,
-        bookingDate: venueBooking?.eventDate || null,
-      }
-    })
-
+    console.log("Filtered venues:", filtered.length)
     setFilteredVenues(filtered)
   }
 
@@ -198,7 +157,7 @@ const HomePage = () => {
               onSuccess={() => {
                 setVenueToBook(null)
                 setActiveTab("reservasi")
-                fetchUserBookings()
+                toast.success("Booking berhasil!")
               }}
               onCancel={() => setVenueToBook(null)}
               onNavigateHome={() => {
@@ -210,6 +169,7 @@ const HomePage = () => {
         </div>
       )}
 
+      {/* Navigation Tabs - hanya untuk customer */}
       {userRole !== "admin" && (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
@@ -217,7 +177,7 @@ const HomePage = () => {
               <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => handleTabChange("beranda")}
-                  className={`px-4 py-1 rounded-md text-xs font-medium transition-colors ${
+                  className={`px-6 py-2 rounded-md font-medium transition-colors ${
                     activeTab === "beranda" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -227,15 +187,17 @@ const HomePage = () => {
                   <>
                     <button
                       onClick={() => handleTabChange("reservasi")}
-                      className={`px-4 py-1 rounded-md text-xs font-medium transition-colors ${
-                        activeTab === "reservasi" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
+                      className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                        activeTab === "reservasi"
+                          ? "bg-white shadow text-blue-600"
+                          : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
                       Reservasi Saya
                     </button>
                     <button
                       onClick={() => handleTabChange("kalender")}
-                      className={`px-4 py-1 rounded-md text-xs font-medium transition-colors ${
+                      className={`px-6 py-2 rounded-md font-medium transition-colors ${
                         activeTab === "kalender" ? "bg-white shadow text-blue-600" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
@@ -249,61 +211,60 @@ const HomePage = () => {
         </div>
       )}
 
+      {/* Main Content */}
       {(activeTab === "beranda" || userRole === "admin") && (
         <div className="container mx-auto px-4 py-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-8">
-              <div className="relative max-w-md mx-auto mb-6">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">King Royal Hotel</h1>
+            <p className="text-gray-600 mb-6 text-base">Luxury accommodation experience</p>
+
+            <div className="max-w-md mx-auto mb-6">
+              <div className="relative">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Cari venue..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
+            </div>
 
-              <div className="flex justify-center">
-                <div className="w-full max-w-md md:max-w-full">
-                  <div className="hidden md:flex justify-center gap-2 mb-4">
-                    {["all", "ballroom", "meeting", "outdoor"].map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap border ${
-                          selectedCategory === category
-                            ? "bg-blue-500 text-white border-blue-500"
-                            : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                        }`}
-                      >
-                        {category === "all" ? "Semua Venue" : 
-                         category === "ballroom" ? "Ballroom" :
-                         category === "meeting" ? "Meeting Room" : "Outdoor"}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="md:hidden overflow-x-auto pb-2">
-                    <div className="flex gap-2 w-max px-4">
-                      {["all", "ballroom", "meeting", "outdoor"].map((category) => (
-                        <button
-                          key={category}
-                          onClick={() => setSelectedCategory(category)}
-                          className={`px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap border flex-shrink-0 ${
-                            selectedCategory === category
-                              ? "bg-blue-500 text-white border-blue-500"
-                              : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
-                          }`}
-                        >
-                          {category === "all" ? "Semua Venue" : 
-                           category === "ballroom" ? "Ballroom" :
-                           category === "meeting" ? "Meeting Room" : "Outdoor"}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex rounded-lg p-1 shadow-sm border border-gray-200 overflow-x-auto">
+                <button
+                  onClick={() => setSelectedCategory("all")}
+                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                    selectedCategory === "all" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Semua Venue
+                </button>
+                <button
+                  onClick={() => setSelectedCategory("ballroom")}
+                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                    selectedCategory === "ballroom" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Ballroom
+                </button>
+                <button
+                  onClick={() => setSelectedCategory("meeting")}
+                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                    selectedCategory === "meeting" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Meeting Room
+                </button>
+                <button
+                  onClick={() => setSelectedCategory("outdoor")}
+                  className={`px-4 sm:px-6 py-2 rounded-md font-medium transition-colors whitespace-nowrap ${
+                    selectedCategory === "outdoor" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Outdoor
+                </button>
               </div>
             </div>
           </div>
@@ -311,7 +272,10 @@ const HomePage = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse"
+                >
                   <div className="h-48 bg-gray-200"></div>
                   <div className="p-4 space-y-3">
                     <div className="h-5 bg-gray-200 rounded w-3/4"></div>
@@ -320,6 +284,24 @@ const HomePage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : venues.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🏨</div>
+              <h3 className="text-xl font-semibold text-gray-600 mb-2">Belum Ada Venue</h3>
+              <p className="text-gray-500 mb-4">
+                {userRole === "admin"
+                  ? "Silakan tambahkan venue melalui menu Admin > Venues"
+                  : "Venue sedang dalam proses setup. Silakan coba lagi nanti."}
+              </p>
+              {userRole === "admin" && (
+                <button
+                  onClick={() => window.location.reload()}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Refresh Data
+                </button>
+              )}
             </div>
           ) : filteredVenues.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -330,8 +312,6 @@ const HomePage = () => {
                   onBook={handleBookVenue}
                   onViewDetails={handleViewDetails}
                   userRole={userRole}
-                  bookingStatus={venue.bookingStatus}
-                  bookingDate={venue.bookingDate}
                 />
               ))}
             </div>
@@ -344,6 +324,15 @@ const HomePage = () => {
                   ? `Tidak ada venue yang sesuai dengan pencarian "${searchTerm}".`
                   : "Tidak ada venue yang sesuai dengan filter yang dipilih."}
               </p>
+              <button
+                onClick={() => {
+                  setSearchTerm("")
+                  setSelectedCategory("all")
+                }}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Reset Filter
+              </button>
             </div>
           )}
 
@@ -353,11 +342,11 @@ const HomePage = () => {
             onClose={() => setShowDetailModal(false)}
             onBook={handleBookVenue}
             userRole={userRole}
-            bookingStatus={selectedVenue?.bookingStatus}
           />
         </div>
       )}
 
+      {/* Customer Tabs Content */}
       {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
       {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard userRole={userRole} />}
     </div>
