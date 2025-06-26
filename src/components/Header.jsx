@@ -35,7 +35,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
 
   return (
     <header className="header header-container header-responsive bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40 mobile-safe-area-top">
-      <div className="header-content header-content-container header-content-responsive mobile-header">
+      <div className="header-content header-content-container header-content-responsive mobile-header px-4">
         <div className="header-inner header-inner-container header-inner-responsive flex justify-between items-center h-14 sm:h-16">
           <div className="header-brand header-brand-container header-brand-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-3 min-w-0 flex-1">
             <div className="header-logo header-logo-container header-logo-responsive w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center flex-shrink-0">
@@ -57,6 +57,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
 
           {currentUser ? (
             <div className="header-user header-user-container header-user-responsive flex items-center space-x-2 sm:space-x-4">
+              {/* Desktop Navigation untuk Admin */}
               {userRole === "admin" && (
                 <div className="header-nav header-nav-container header-nav-responsive hidden sm:flex space-x-1 bg-gray-100 p-1 rounded-lg">
                   <button
@@ -89,7 +90,40 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                 </div>
               )}
 
-              <div className="header-user-menu header-user-menu-container header-user-menu-responsive relative ml-2 sm:ml-4">
+              {/* Mobile Navigation untuk Admin */}
+              {userRole === "admin" && (
+                <div className="header-mobile-nav header-mobile-nav-container header-mobile-nav-responsive sm:hidden flex space-x-1 bg-gray-100 p-1 rounded-lg mr-2">
+                  <button
+                    onClick={() => setCurrentView("home")}
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-home header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "home" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    }`}
+                  >
+                    <FaHome className="text-xs" />
+                    <span>Beranda</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView("admin")}
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-admin header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "admin" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    }`}
+                  >
+                    <FaChartBar className="text-xs" />
+                    <span>Panel Admin</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView("calendar")}
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-calendar header-mobile-nav-btn-responsive px-2 py-1 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                      currentView === "calendar" ? "bg-white shadow text-blue-600" : "text-gray-600"
+                    }`}
+                  >
+                    <FaCalendarAlt className="text-xs" />
+                    <span>Kalender</span>
+                  </button>
+                </div>
+              )}
+
+              <div className="header-user-menu header-user-menu-container header-user-menu-responsive relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="header-user-btn header-user-btn-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2 p-1 sm:p-2 mobile-p-2 rounded-xl hover:bg-gray-100 transition-colors mobile-touch-target"
