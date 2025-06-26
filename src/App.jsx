@@ -74,15 +74,7 @@ function AppContent() {
     }
   }
 
-  const handleBookRoom = (room) => {
-    if (!currentUser) {
-      handleNavigate("auth")
-      return
-    }
-    setSelectedRoom(room)
-    handleNavigate("booking")
-  }
-
+ 
   const handleBookingSuccess = () => {
     handleNavigate("bookings")
     setSelectedRoom(null)

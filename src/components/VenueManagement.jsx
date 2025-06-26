@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import PropTypes from "prop-types"
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore"
 import { db } from "../config/firebase"
 import { useAuth } from "../context/AuthContext"
@@ -42,7 +43,8 @@ const VenueManagement = () => {
       category: "ballroom",
       capacity: 250,
       price: 5000000,
-      description: "Ballroom mewah dengan kapasitas besar, dilengkapi dengan fasilitas premium untuk acara pernikahan, gala dinner, dan event besar lainnya.",
+      description:
+        "Ballroom mewah dengan kapasitas besar, dilengkapi dengan fasilitas premium untuk acara pernikahan, gala dinner, dan event besar lainnya.",
       amenities: [
         "Sound System Premium",
         "Lighting Professional",
@@ -75,7 +77,8 @@ const VenueManagement = () => {
       category: "meeting",
       capacity: 35,
       price: 2000000,
-      description: "Ruang meeting modern dengan teknologi terdepan, ideal untuk presentasi bisnis, workshop, dan meeting corporate.",
+      description:
+        "Ruang meeting modern dengan teknologi terdepan, ideal untuk presentasi bisnis, workshop, dan meeting corporate.",
       amenities: [
         "Smart TV 65 inch",
         "Video Conference",
@@ -239,30 +242,30 @@ const VenueManagement = () => {
 
   useEffect(() => {
     if (userRole === "admin") {
-      initializeVenues()
+      const fetchAllData = async () => {
+        setLoading(true)
+        try {
+          const querySnapshot = await getDocs(collection(db, "venues"))
+          const venuesData = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+
+          if (venuesData.length === 0) {
+            await autoInitializeVenues()
+          } else {
+            setVenues(venuesData)
+          }
+        } catch (error) {
+          console.error("Error fetching venues:", error)
+          toast.error("Gagal memuat data venue")
+        }
+        setLoading(false)
+      }
+
+      fetchAllData()
     }
   }, [userRole])
-
-  const initializeVenues = async () => {
-    setLoading(true)
-    try {
-      const querySnapshot = await getDocs(collection(db, "venues"))
-      const venuesData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-
-      if (venuesData.length === 0) {
-        await autoInitializeVenues()
-      } else {
-        setVenues(venuesData)
-      }
-    } catch (error) {
-      console.error("Error fetching venues:", error)
-      toast.error("Gagal memuat data venue")
-    }
-    setLoading(false)
-  }
 
   const autoInitializeVenues = async () => {
     try {
@@ -277,7 +280,14 @@ const VenueManagement = () => {
 
       await Promise.all(addPromises)
       toast.success(`${defaultVenues.length} venue berhasil ditambahkan!`)
-      await initializeVenues()
+
+      // Refresh data after initialization
+      const querySnapshot = await getDocs(collection(db, "venues"))
+      const venuesData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setVenues(venuesData)
     } catch (error) {
       console.error("Error auto-initializing venues:", error)
       toast.error("Gagal menginisialisasi venue default")
@@ -318,7 +328,14 @@ const VenueManagement = () => {
       }
 
       resetForm()
-      await initializeVenues()
+
+      // Refresh data after save
+      const querySnapshot = await getDocs(collection(db, "venues"))
+      const venuesData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setVenues(venuesData)
     } catch (error) {
       console.error("Error saving venue:", error)
       toast.error("Gagal menyimpan venue")
@@ -346,7 +363,14 @@ const VenueManagement = () => {
       try {
         await deleteDoc(doc(db, "venues", venueId))
         toast.success("Venue berhasil dihapus!")
-        await initializeVenues()
+
+        // Refresh data after delete
+        const querySnapshot = await getDocs(collection(db, "venues"))
+        const venuesData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        setVenues(venuesData)
       } catch (error) {
         console.error("Error deleting venue:", error)
         toast.error("Gagal menghapus venue")
@@ -380,320 +404,395 @@ const VenueManagement = () => {
 
   if (userRole !== "admin") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center mobile-safe-area">
-        <div className="text-center p-6 mobile-p-6">
-          <h2 className="text-2xl mobile-text-xl font-bold text-gray-900 mb-4 mobile-mb-4">Akses Ditolak</h2>
-          <p className="text-gray-600 text-base mobile-text-base">Anda tidak memiliki akses ke manajemen venue.</p>
+      <div className="venue-management-access venue-management-access-container venue-management-access-responsive min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="venue-management-access-content venue-management-access-content-responsive text-center p-4 sm:p-6">
+          <h2 className="venue-management-access-title venue-management-access-title-responsive text-xl sm:text-2xl font-bold text-gray-900 mb-4">
+            Akses Ditolak
+          </h2>
+          <p className="venue-management-access-text venue-management-access-text-responsive text-gray-600 text-sm sm:text-base">
+            Anda tidak memiliki akses ke manajemen venue.
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 mobile-space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mobile-space-y-4 sm:space-y-0">
-        <div className="flex items-center space-x-4">
-          <button 
+    <div className="venue-management venue-management-container venue-management-responsive space-y-4 sm:space-y-6">
+      <div className="venue-management-header venue-management-header-container venue-management-header-responsive flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div className="venue-management-title venue-management-title-container venue-management-title-responsive flex items-center space-x-4">
+          <button
             onClick={() => window.history.back()}
-            className="p-2 rounded-full hover:bg-gray-100 transition-colors mobile-touch-target"
+            className="venue-management-back venue-management-back-responsive p-2 rounded-full hover:bg-gray-100 transition-colors active:scale-95"
           >
             <FaArrowLeft className="text-gray-600" />
           </button>
           <div>
-            <h2 className="text-2xl mobile-text-xl font-bold text-gray-900">Manajemen Venue</h2>
-            <p className="text-gray-600 mobile-text-sm">Kelola venue hotel dan fasilitas</p>
+            <h2 className="venue-management-heading venue-management-heading-responsive text-xl sm:text-2xl font-bold text-gray-900">
+              Manajemen Venue
+            </h2>
+            <p className="venue-management-subtitle venue-management-subtitle-responsive text-gray-600 text-xs sm:text-sm">
+              Kelola venue hotel dan fasilitas
+            </p>
           </div>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 mobile-px-4 mobile-py-2 rounded-xl hover:bg-blue-600 transition-colors flex items-center space-x-2 mobile-space-x-2 font-semibold mobile-button"
+          className="venue-management-add venue-management-add-responsive bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-blue-600 transition-colors flex items-center space-x-2 font-semibold text-sm sm:text-base active:scale-95"
         >
-          <FaPlus className="mobile-icon-sm" />
+          <FaPlus className="text-xs sm:text-sm" />
           <span>Tambah Venue</span>
         </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12 mobile-loading">
-          <FaSpinner className="animate-spin text-4xl mobile-text-2xl text-blue-500" />
+        <div className="venue-management-loading venue-management-loading-container venue-management-loading-responsive flex items-center justify-center py-8 sm:py-12">
+          <FaSpinner className="animate-spin text-2xl sm:text-4xl text-blue-500" />
         </div>
       ) : venues.length === 0 ? (
-        <div className="text-center py-12 mobile-py-6">
-          <FaBuilding className="text-6xl mobile-text-2xl text-gray-300 mx-auto mb-4 mobile-mb-4" />
-          <h3 className="text-xl mobile-text-lg font-semibold text-gray-900 mb-2">Belum Ada Venue</h3>
-          <p className="text-gray-600 mb-6 mobile-mb-6 text-base mobile-text-base">
+        <div className="venue-management-empty venue-management-empty-container venue-management-empty-responsive text-center py-8 sm:py-12">
+          <FaBuilding className="venue-management-empty-icon venue-management-empty-icon-responsive text-4xl sm:text-6xl text-gray-300 mx-auto mb-4" />
+          <h3 className="venue-management-empty-title venue-management-empty-title-responsive text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+            Belum Ada Venue
+          </h3>
+          <p className="venue-management-empty-text venue-management-empty-text-responsive text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
             Tambahkan venue pertama untuk hotel Anda
           </p>
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-blue-500 text-white px-6 py-3 mobile-px-6 mobile-py-3 rounded-xl hover:bg-blue-600 transition-colors font-semibold mobile-button"
+            className="venue-management-empty-button venue-management-empty-button-responsive bg-blue-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-blue-600 transition-colors font-semibold text-sm sm:text-base active:scale-95"
           >
             Tambah Venue Pertama
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mobile-card-grid">
+        <div className="venue-management-grid venue-management-grid-container venue-management-grid-responsive grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {venues.map((venue) => (
-            <div
+            <VenueCard
               key={venue.id}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 mobile-card"
-            >
-              <div className="relative aspect-video mobile-image-video bg-gradient-to-br from-gray-100 to-blue-100">
-                <img
-                  src={venue.imageUrl || "/placeholder.svg"}
-                  alt={venue.name}
-                  className="w-full h-full object-cover mobile-image"
-                  onError={(e) => {
-                    e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop"
-                  }}
-                />
-                <div className="absolute top-2 left-2">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium mobile-status-badge ${
-                      venue.available ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {venue.available ? "Tersedia" : "Tidak Tersedia"}
-                  </span>
-                </div>
-                <div className="absolute top-2 right-2">
-                  <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium mobile-status-badge">
-                    {getCategoryName(venue.category)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-4 mobile-p-4">
-                <div className="space-y-3 mobile-space-y-3">
-                  <div>
-                    <h3 className="text-lg mobile-text-lg font-bold text-gray-900 mb-1">{venue.name}</h3>
-                    <p className="text-gray-600 text-sm mobile-text-sm line-clamp-2">{venue.description}</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 mobile-grid-2">
-                    <div className="bg-blue-50 p-2 mobile-p-2 rounded-lg">
-                      <div className="flex items-center text-blue-700 mb-1">
-                        <FaUsers className="mr-1 text-blue-600 mobile-icon-sm" />
-                        <span className="font-semibold text-xs mobile-text-xs">Kapasitas</span>
-                      </div>
-                      <div className="text-gray-900 font-medium text-sm mobile-text-sm">{venue.capacity} orang</div>
-                    </div>
-
-                    <div className="bg-green-50 p-2 mobile-p-2 rounded-lg">
-                      <div className="flex items-center text-green-700 mb-1">
-                        <FaMoneyBillWave className="mr-1 text-green-600 mobile-icon-sm" />
-                        <span className="font-semibold text-xs mobile-text-xs">Harga</span>
-                      </div>
-                      <div className="text-gray-900 font-medium text-sm mobile-text-sm">
-                        Rp {venue.price?.toLocaleString("id-ID")}
-                      </div>
-                    </div>
-                  </div>
-
-                  {venue.amenities && venue.amenities.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {venue.amenities.slice(0, 3).map((amenity, index) => (
-                        <span
-                          key={index}
-                          className="bg-blue-100 text-blue-700 px-2 py-1 rounded-lg text-xs font-medium mobile-status-badge"
-                        >
-                          {amenity}
-                        </span>
-                      ))}
-                      {venue.amenities.length > 3 && (
-                        <span className="text-blue-600 text-xs mobile-text-xs font-semibold">
-                          +{venue.amenities.length - 3} lainnya
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2 pt-2 border-t border-gray-100">
-                    <button
-                      onClick={() => handleEdit(venue)}
-                      className="flex-1 bg-blue-500 text-white px-3 py-2 mobile-px-3 mobile-py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-1 mobile-space-x-1 font-medium text-sm mobile-text-sm mobile-button"
-                    >
-                      <FaEdit className="mobile-icon-sm" />
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(venue.id)}
-                      className="flex-1 bg-red-500 text-white px-3 py-2 mobile-px-3 mobile-py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-1 mobile-space-x-1 font-medium text-sm mobile-text-sm mobile-button"
-                    >
-                      <FaTrash className="mobile-icon-sm" />
-                      <span>Hapus</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              venue={venue}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              getCategoryName={getCategoryName}
+            />
           ))}
         </div>
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-0 z-50 overflow-y-auto">
-          <div className="bg-white w-full min-h-screen sm:min-h-0 sm:max-w-2xl sm:mx-4 sm:my-4 sm:rounded-2xl overflow-hidden shadow-2xl">
-            <div className="flex flex-col h-full sm:h-auto">
-              <div className="bg-white border-b border-gray-200 p-4 mobile-p-4 flex-shrink-0">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg mobile-text-lg font-bold text-gray-900">
-                    {editingVenue ? "Edit Venue" : "Tambah Venue Baru"}
-                  </h3>
-                  <button
-                    onClick={resetForm}
-                    className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors mobile-touch-target"
-                  >
-                    <FaTimes className="text-gray-600 mobile-icon-sm" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 mobile-p-4 mobile-scroll">
-                <form onSubmit={handleSubmit} className="space-y-4 mobile-space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="mobile-form-group">
-                      <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                        Nama Venue
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-
-                    <div className="mobile-form-group">
-                      <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                        Kategori
-                      </label>
-                      <select
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="meeting">Meeting Room</option>
-                        <option value="ballroom">Ballroom</option>
-                        <option value="outdoor">Outdoor Venue</option>
-                      </select>
-                    </div>
-
-                    <div className="mobile-form-group">
-                      <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                        Kapasitas
-                      </label>
-                      <input
-                        type="number"
-                        name="capacity"
-                        value={formData.capacity}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-
-                    <div className="mobile-form-group">
-                      <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                        Harga (Rp)
-                      </label>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mobile-form-group">
-                    <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                      URL Gambar
-                    </label>
-                    <input
-                      type="url"
-                      name="imageUrl"
-                      value={formData.imageUrl}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-
-                  <div className="mobile-form-group">
-                    <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                      Deskripsi
-                    </label>
-                    <textarea
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      rows="3"
-                      className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-
-                  <div className="mobile-form-group">
-                    <label className="block text-sm mobile-text-sm font-medium text-gray-700 mb-1 mobile-form-label">
-                      Fasilitas (pisahkan dengan koma)
-                    </label>
-                    <textarea
-                      name="amenities"
-                      value={formData.amenities}
-                      onChange={handleInputChange}
-                      rows="2"
-                      className="w-full px-3 py-2 mobile-form-input border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="WiFi, AC, Proyektor, Sound System"
-                    />
-                  </div>
-
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="available"
-                      checked={formData.available}
-                      onChange={handleInputChange}
-                      className="mr-2 mobile-touch-target"
-                    />
-                    <label className="text-sm mobile-text-sm font-medium text-gray-700">Venue tersedia</label>
-                  </div>
-                </form>
-              </div>
-
-              <div className="bg-gray-50 border-t border-gray-200 p-4 mobile-p-4 flex-shrink-0">
-                <div className="flex gap-3">
-                  <button
-                    onClick={resetForm}
-                    className="flex-1 bg-gray-200 text-gray-800 px-4 py-3 mobile-px-4 mobile-py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold mobile-button"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className="flex-1 bg-blue-500 text-white px-4 py-3 mobile-px-4 mobile-py-3 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 flex items-center justify-center space-x-2 mobile-space-x-2 font-semibold mobile-button"
-                  >
-                    {loading ? (
-                      <FaSpinner className="animate-spin mobile-icon-sm" />
-                    ) : (
-                      <FaSave className="mobile-icon-sm" />
-                    )}
-                    <span>{editingVenue ? "Perbarui" : "Simpan"}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <VenueModal
+          editingVenue={editingVenue}
+          formData={formData}
+          loading={loading}
+          onInputChange={handleInputChange}
+          onSubmit={handleSubmit}
+          onClose={resetForm}
+        />
       )}
     </div>
   )
+}
+
+// Separate VenueCard component for better organization
+const VenueCard = ({ venue, onEdit, onDelete, getCategoryName }) => (
+  <div className="venue-management-card venue-management-card-container venue-management-card-responsive bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300">
+    <div className="venue-management-card-image venue-management-card-image-container venue-management-card-image-responsive relative aspect-video bg-gradient-to-br from-gray-100 to-blue-100">
+      <img
+        src={venue.imageUrl || "/placeholder.svg"}
+        alt={venue.name}
+        className="venue-management-card-img venue-management-card-img-responsive w-full h-full object-cover"
+        onError={(e) => {
+          e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop"
+        }}
+      />
+      <div className="venue-management-card-status venue-management-card-status-responsive absolute top-2 left-2">
+        <span
+          className={`venue-management-status-badge venue-management-status-badge-responsive px-2 py-1 rounded-full text-xs font-medium ${
+            venue.available ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
+          }`}
+        >
+          {venue.available ? "Tersedia" : "Tidak Tersedia"}
+        </span>
+      </div>
+      <div className="venue-management-card-category venue-management-card-category-responsive absolute top-2 right-2">
+        <span className="venue-management-category-badge venue-management-category-badge-responsive bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+          {getCategoryName(venue.category)}
+        </span>
+      </div>
+    </div>
+
+    <div className="venue-management-card-content venue-management-card-content-container venue-management-card-content-responsive p-4">
+      <div className="venue-management-card-info venue-management-card-info-container venue-management-card-info-responsive space-y-3">
+        <div>
+          <h3 className="venue-management-card-name venue-management-card-name-responsive text-base sm:text-lg font-bold text-gray-900 mb-1">
+            {venue.name}
+          </h3>
+          <p className="venue-management-card-description venue-management-card-description-responsive text-gray-600 text-xs sm:text-sm line-clamp-2">
+            {venue.description}
+          </p>
+        </div>
+
+        <div className="venue-management-card-stats venue-management-card-stats-container venue-management-card-stats-responsive grid grid-cols-2 gap-2">
+          <div className="venue-management-card-stat venue-management-card-stat-responsive bg-blue-50 p-2 rounded-lg">
+            <div className="venue-management-stat-header venue-management-stat-header-responsive flex items-center text-blue-700 mb-1">
+              <FaUsers className="mr-1 text-blue-600 text-xs" />
+              <span className="font-semibold text-xs">Kapasitas</span>
+            </div>
+            <div className="venue-management-stat-value venue-management-stat-value-responsive text-gray-900 font-medium text-xs sm:text-sm">
+              {venue.capacity} orang
+            </div>
+          </div>
+
+          <div className="venue-management-card-stat venue-management-card-stat-responsive bg-green-50 p-2 rounded-lg">
+            <div className="venue-management-stat-header venue-management-stat-header-responsive flex items-center text-green-700 mb-1">
+              <FaMoneyBillWave className="mr-1 text-green-600 text-xs" />
+              <span className="font-semibold text-xs">Harga</span>
+            </div>
+            <div className="venue-management-stat-value venue-management-stat-value-responsive text-gray-900 font-medium text-xs sm:text-sm">
+              Rp {venue.price?.toLocaleString("id-ID")}
+            </div>
+          </div>
+        </div>
+
+        {venue.amenities && venue.amenities.length > 0 && (
+          <div className="venue-management-card-amenities venue-management-card-amenities-container venue-management-card-amenities-responsive flex flex-wrap gap-1">
+            {venue.amenities.slice(0, 3).map((amenity, index) => (
+              <span
+                key={index}
+                className="venue-management-amenity venue-management-amenity-responsive bg-blue-100 text-blue-700 px-2 py-1 rounded-lg text-xs font-medium"
+              >
+                {amenity}
+              </span>
+            ))}
+            {venue.amenities.length > 3 && (
+              <span className="venue-management-amenity-more venue-management-amenity-more-responsive text-blue-600 text-xs font-semibold">
+                +{venue.amenities.length - 3} lainnya
+              </span>
+            )}
+          </div>
+        )}
+
+        <div className="venue-management-card-actions venue-management-card-actions-container venue-management-card-actions-responsive flex gap-2 pt-2 border-t border-gray-100">
+          <button
+            onClick={() => onEdit(venue)}
+            className="venue-management-edit venue-management-edit-responsive flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-1 font-medium text-xs sm:text-sm active:scale-95"
+          >
+            <FaEdit className="text-xs" />
+            <span>Edit</span>
+          </button>
+          <button
+            onClick={() => onDelete(venue.id)}
+            className="venue-management-delete venue-management-delete-responsive flex-1 bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-1 font-medium text-xs sm:text-sm active:scale-95"
+          >
+            <FaTrash className="text-xs" />
+            <span>Hapus</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
+// Separate VenueModal component for better organization
+const VenueModal = ({ editingVenue, formData, loading, onInputChange, onSubmit, onClose }) => (
+  <div className="venue-management-modal venue-management-modal-overlay venue-management-modal-responsive fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center p-0 z-50 overflow-y-auto">
+    <div className="venue-management-modal-container venue-management-modal-container-responsive bg-white w-full min-h-screen sm:min-h-0 sm:max-w-2xl sm:mx-4 sm:my-4 sm:rounded-2xl overflow-hidden shadow-2xl">
+      <div className="venue-management-modal-content venue-management-modal-content-responsive flex flex-col h-full sm:h-auto">
+        <div className="venue-management-modal-header venue-management-modal-header-container venue-management-modal-header-responsive bg-white border-b border-gray-200 p-4 flex-shrink-0">
+          <div className="venue-management-modal-title venue-management-modal-title-responsive flex items-center justify-between">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900">
+              {editingVenue ? "Edit Venue" : "Tambah Venue Baru"}
+            </h3>
+            <button
+              onClick={onClose}
+              className="venue-management-modal-close venue-management-modal-close-responsive w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors active:scale-95"
+            >
+              <FaTimes className="text-gray-600 text-xs sm:text-sm" />
+            </button>
+          </div>
+        </div>
+
+        <div className="venue-management-modal-body venue-management-modal-body-container venue-management-modal-body-responsive flex-1 overflow-y-auto p-4">
+          <form onSubmit={onSubmit} className="venue-management-form venue-management-form-responsive space-y-4">
+            <div className="venue-management-form-grid venue-management-form-grid-responsive grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="venue-management-form-group venue-management-form-group-responsive">
+                <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Nama Venue
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={onInputChange}
+                  className="venue-management-form-input venue-management-form-input-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div className="venue-management-form-group venue-management-form-group-responsive">
+                <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Kategori
+                </label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={onInputChange}
+                  className="venue-management-form-select venue-management-form-select-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                >
+                  <option value="meeting">Meeting Room</option>
+                  <option value="ballroom">Ballroom</option>
+                  <option value="outdoor">Outdoor Venue</option>
+                </select>
+              </div>
+
+              <div className="venue-management-form-group venue-management-form-group-responsive">
+                <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Kapasitas
+                </label>
+                <input
+                  type="number"
+                  name="capacity"
+                  value={formData.capacity}
+                  onChange={onInputChange}
+                  className="venue-management-form-input venue-management-form-input-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div className="venue-management-form-group venue-management-form-group-responsive">
+                <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Harga (Rp)
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={onInputChange}
+                  className="venue-management-form-input venue-management-form-input-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="venue-management-form-group venue-management-form-group-responsive">
+              <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                URL Gambar
+              </label>
+              <input
+                type="url"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={onInputChange}
+                className="venue-management-form-input venue-management-form-input-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+
+            <div className="venue-management-form-group venue-management-form-group-responsive">
+              <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Deskripsi
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={onInputChange}
+                rows="3"
+                className="venue-management-form-textarea venue-management-form-textarea-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                required
+              />
+            </div>
+
+            <div className="venue-management-form-group venue-management-form-group-responsive">
+              <label className="venue-management-form-label venue-management-form-label-responsive block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                Fasilitas (pisahkan dengan koma)
+              </label>
+              <textarea
+                name="amenities"
+                value={formData.amenities}
+                onChange={onInputChange}
+                rows="2"
+                className="venue-management-form-textarea venue-management-form-textarea-responsive w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="WiFi, AC, Proyektor, Sound System"
+              />
+            </div>
+
+            <div className="venue-management-form-checkbox venue-management-form-checkbox-responsive flex items-center">
+              <input
+                type="checkbox"
+                name="available"
+                checked={formData.available}
+                onChange={onInputChange}
+                className="venue-management-checkbox venue-management-checkbox-responsive mr-2"
+              />
+              <label className="venue-management-checkbox-label venue-management-checkbox-label-responsive text-xs sm:text-sm font-medium text-gray-700">
+                Venue tersedia
+              </label>
+            </div>
+          </form>
+        </div>
+
+        <div className="venue-management-modal-footer venue-management-modal-footer-container venue-management-modal-footer-responsive bg-gray-50 border-t border-gray-200 p-4 flex-shrink-0">
+          <div className="venue-management-modal-actions venue-management-modal-actions-responsive flex gap-3">
+            <button
+              onClick={onClose}
+              className="venue-management-cancel venue-management-cancel-responsive flex-1 bg-gray-200 text-gray-800 px-4 py-2 sm:py-3 rounded-xl hover:bg-gray-300 transition-colors font-semibold text-sm sm:text-base active:scale-95"
+            >
+              Batal
+            </button>
+            <button
+              onClick={onSubmit}
+              disabled={loading}
+              className="venue-management-save venue-management-save-responsive flex-1 bg-blue-500 text-white px-4 py-2 sm:py-3 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 flex items-center justify-center space-x-2 font-semibold text-sm sm:text-base active:scale-95"
+            >
+              {loading ? (
+                <FaSpinner className="animate-spin text-xs sm:text-sm" />
+              ) : (
+                <FaSave className="text-xs sm:text-sm" />
+              )}
+              <span>{editingVenue ? "Perbarui" : "Simpan"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)
+
+// PropTypes for VenueCard
+VenueCard.propTypes = {
+  venue: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    capacity: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    amenities: PropTypes.arrayOf(PropTypes.string),
+    imageUrl: PropTypes.string,
+    available: PropTypes.bool.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  getCategoryName: PropTypes.func.isRequired,
+}
+
+// PropTypes for VenueModal
+VenueModal.propTypes = {
+  editingVenue: PropTypes.object,
+  formData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    capacity: PropTypes.string.isRequired,
+    price: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    amenities: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    available: PropTypes.bool.isRequired,
+  }).isRequired,
+  loading: PropTypes.bool.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 export default VenueManagement

@@ -165,211 +165,266 @@ const CustomerDashboard = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case "pending":
-        return <FaClock className="text-amber-600" />
+        return (
+          <FaClock className="customer-dashboard-status-icon customer-dashboard-status-icon-responsive text-amber-600" />
+        )
       case "approved":
-        return <FaCheckCircle className="text-emerald-600" />
+        return (
+          <FaCheckCircle className="customer-dashboard-status-icon customer-dashboard-status-icon-responsive text-emerald-600" />
+        )
       case "rejected":
-        return <FaTimesCircle className="text-red-600" />
+        return (
+          <FaTimesCircle className="customer-dashboard-status-icon customer-dashboard-status-icon-responsive text-red-600" />
+        )
       default:
-        return <FaClock className="text-gray-600" />
+        return (
+          <FaClock className="customer-dashboard-status-icon customer-dashboard-status-icon-responsive text-gray-600" />
+        )
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <FaSpinner className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600">Memuat dashboard...</p>
+      <div className="customer-dashboard-loading customer-dashboard-loading-container customer-dashboard-loading-responsive min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="customer-dashboard-loading-content customer-dashboard-loading-content-responsive text-center">
+          <FaSpinner className="customer-dashboard-loading-spinner customer-dashboard-loading-spinner-responsive animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
+          <p className="customer-dashboard-loading-text customer-dashboard-loading-text-responsive text-gray-600">
+            Memuat dashboard...
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="customer-dashboard customer-dashboard-container customer-dashboard-responsive min-h-screen bg-gray-50">
+      <div className="customer-dashboard-content customer-dashboard-content-container customer-dashboard-content-responsive container mx-auto px-4 py-6 max-w-7xl">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Dashboard Customer</h1>
-          <p className="text-gray-600">Selamat datang, {currentUser?.displayName || currentUser?.email}</p>
+        <div className="customer-dashboard-header customer-dashboard-header-container customer-dashboard-header-responsive mb-6">
+          <h1 className="customer-dashboard-title customer-dashboard-title-responsive text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            Dashboard Customer
+          </h1>
+          <p className="customer-dashboard-subtitle customer-dashboard-subtitle-responsive text-gray-600">
+            Selamat datang, {currentUser?.displayName || currentUser?.email}
+          </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xl lg:text-2xl font-bold text-gray-900">{stats.total}</div>
-                <div className="text-xs lg:text-sm text-gray-600">Total Reservasi</div>
+        <div className="customer-dashboard-stats customer-dashboard-stats-container customer-dashboard-stats-responsive grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+          <div className="customer-dashboard-stat customer-dashboard-stat-total customer-dashboard-stat-responsive bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
+            <div className="customer-dashboard-stat-content customer-dashboard-stat-content-responsive flex items-center justify-between">
+              <div className="customer-dashboard-stat-info customer-dashboard-stat-info-responsive">
+                <div className="customer-dashboard-stat-number customer-dashboard-stat-number-responsive text-xl lg:text-2xl font-bold text-gray-900">
+                  {stats.total}
+                </div>
+                <div className="customer-dashboard-stat-label customer-dashboard-stat-label-responsive text-xs lg:text-sm text-gray-600">
+                  Total Reservasi
+                </div>
               </div>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <FaCalendarAlt className="text-blue-600 text-sm lg:text-base" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xl lg:text-2xl font-bold text-amber-600">{stats.pending}</div>
-                <div className="text-xs lg:text-sm text-gray-600">Menunggu</div>
-              </div>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <FaClock className="text-amber-600 text-sm lg:text-base" />
+              <div className="customer-dashboard-stat-icon customer-dashboard-stat-icon-responsive w-8 h-8 lg:w-10 lg:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                <FaCalendarAlt className="customer-dashboard-stat-icon-inner customer-dashboard-stat-icon-inner-responsive text-blue-600 text-sm lg:text-base" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xl lg:text-2xl font-bold text-emerald-600">{stats.approved}</div>
-                <div className="text-xs lg:text-sm text-gray-600">Disetujui</div>
+          <div className="customer-dashboard-stat customer-dashboard-stat-pending customer-dashboard-stat-responsive bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
+            <div className="customer-dashboard-stat-content customer-dashboard-stat-content-responsive flex items-center justify-between">
+              <div className="customer-dashboard-stat-info customer-dashboard-stat-info-responsive">
+                <div className="customer-dashboard-stat-number customer-dashboard-stat-number-responsive text-xl lg:text-2xl font-bold text-amber-600">
+                  {stats.pending}
+                </div>
+                <div className="customer-dashboard-stat-label customer-dashboard-stat-label-responsive text-xs lg:text-sm text-gray-600">
+                  Menunggu
+                </div>
               </div>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <FaCheckCircle className="text-emerald-600 text-sm lg:text-base" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-xl lg:text-2xl font-bold text-red-500">{stats.rejected}</div>
-                <div className="text-xs lg:text-sm text-gray-600">Ditolak</div>
-              </div>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                <FaTimesCircle className="text-red-500 text-sm lg:text-base" />
+              <div className="customer-dashboard-stat-icon customer-dashboard-stat-icon-responsive w-8 h-8 lg:w-10 lg:h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                <FaClock className="customer-dashboard-stat-icon-inner customer-dashboard-stat-icon-inner-responsive text-amber-600 text-sm lg:text-base" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200 col-span-2 lg:col-span-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-lg lg:text-xl font-bold text-green-600">
+          <div className="customer-dashboard-stat customer-dashboard-stat-approved customer-dashboard-stat-responsive bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
+            <div className="customer-dashboard-stat-content customer-dashboard-stat-content-responsive flex items-center justify-between">
+              <div className="customer-dashboard-stat-info customer-dashboard-stat-info-responsive">
+                <div className="customer-dashboard-stat-number customer-dashboard-stat-number-responsive text-xl lg:text-2xl font-bold text-emerald-600">
+                  {stats.approved}
+                </div>
+                <div className="customer-dashboard-stat-label customer-dashboard-stat-label-responsive text-xs lg:text-sm text-gray-600">
+                  Disetujui
+                </div>
+              </div>
+              <div className="customer-dashboard-stat-icon customer-dashboard-stat-icon-responsive w-8 h-8 lg:w-10 lg:h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                <FaCheckCircle className="customer-dashboard-stat-icon-inner customer-dashboard-stat-icon-inner-responsive text-emerald-600 text-sm lg:text-base" />
+              </div>
+            </div>
+          </div>
+
+          <div className="customer-dashboard-stat customer-dashboard-stat-rejected customer-dashboard-stat-responsive bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200">
+            <div className="customer-dashboard-stat-content customer-dashboard-stat-content-responsive flex items-center justify-between">
+              <div className="customer-dashboard-stat-info customer-dashboard-stat-info-responsive">
+                <div className="customer-dashboard-stat-number customer-dashboard-stat-number-responsive text-xl lg:text-2xl font-bold text-red-500">
+                  {stats.rejected}
+                </div>
+                <div className="customer-dashboard-stat-label customer-dashboard-stat-label-responsive text-xs lg:text-sm text-gray-600">
+                  Ditolak
+                </div>
+              </div>
+              <div className="customer-dashboard-stat-icon customer-dashboard-stat-icon-responsive w-8 h-8 lg:w-10 lg:h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                <FaTimesCircle className="customer-dashboard-stat-icon-inner customer-dashboard-stat-icon-inner-responsive text-red-500 text-sm lg:text-base" />
+              </div>
+            </div>
+          </div>
+
+          <div className="customer-dashboard-stat customer-dashboard-stat-revenue customer-dashboard-stat-responsive bg-white rounded-2xl p-4 lg:p-6 shadow-sm border border-gray-200 col-span-2 lg:col-span-1">
+            <div className="customer-dashboard-stat-content customer-dashboard-stat-content-responsive flex items-center justify-between">
+              <div className="customer-dashboard-stat-info customer-dashboard-stat-info-responsive">
+                <div className="customer-dashboard-stat-number customer-dashboard-stat-number-responsive text-lg lg:text-xl font-bold text-green-600">
                   Rp {stats.totalSpent.toLocaleString("id-ID")}
                 </div>
-                <div className="text-xs lg:text-sm text-gray-600">Total Pengeluaran</div>
+                <div className="customer-dashboard-stat-label customer-dashboard-stat-label-responsive text-xs lg:text-sm text-gray-600">
+                  Total Pengeluaran
+                </div>
               </div>
-              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                <FaMoneyBillWave className="text-green-600 text-sm lg:text-base" />
+              <div className="customer-dashboard-stat-icon customer-dashboard-stat-icon-responsive w-8 h-8 lg:w-10 lg:h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                <FaMoneyBillWave className="customer-dashboard-stat-icon-inner customer-dashboard-stat-icon-inner-responsive text-green-600 text-sm lg:text-base" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Recent Bookings */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
-          <div className="p-4 lg:p-6 border-b border-gray-200">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h2 className="text-lg lg:text-xl font-bold text-gray-900">Reservasi Terbaru</h2>
-                <p className="text-sm text-gray-600">Daftar reservasi venue Anda</p>
+        <div className="customer-dashboard-bookings customer-dashboard-bookings-container customer-dashboard-bookings-responsive bg-white rounded-2xl shadow-sm border border-gray-200">
+          <div className="customer-dashboard-bookings-header customer-dashboard-bookings-header-responsive p-4 lg:p-6 border-b border-gray-200">
+            <div className="customer-dashboard-bookings-header-content customer-dashboard-bookings-header-content-responsive flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="customer-dashboard-bookings-header-info customer-dashboard-bookings-header-info-responsive">
+                <h2 className="customer-dashboard-bookings-title customer-dashboard-bookings-title-responsive text-lg lg:text-xl font-bold text-gray-900">
+                  Reservasi Terbaru
+                </h2>
+                <p className="customer-dashboard-bookings-subtitle customer-dashboard-bookings-subtitle-responsive text-sm text-gray-600">
+                  Daftar reservasi venue Anda
+                </p>
               </div>
-              <div className="flex items-center space-x-2">
-                <FaChartLine className="text-blue-600" />
-                <span className="text-sm font-medium text-blue-600">{bookings.length} reservasi</span>
+              <div className="customer-dashboard-bookings-stats customer-dashboard-bookings-stats-responsive flex items-center space-x-2">
+                <FaChartLine className="customer-dashboard-bookings-stats-icon customer-dashboard-bookings-stats-icon-responsive text-blue-600" />
+                <span className="customer-dashboard-bookings-stats-text customer-dashboard-bookings-stats-text-responsive text-sm font-medium text-blue-600">
+                  {bookings.length} reservasi
+                </span>
               </div>
             </div>
           </div>
 
-          <div className="p-4 lg:p-6">
+          <div className="customer-dashboard-bookings-content customer-dashboard-bookings-content-responsive p-4 lg:p-6">
             {bookings.length === 0 ? (
-              <div className="text-center py-8 lg:py-12">
-                <div className="text-4xl lg:text-6xl mb-4">📅</div>
-                <h3 className="text-lg lg:text-xl font-semibold text-gray-600 mb-2">Belum Ada Reservasi</h3>
-                <p className="text-gray-500 mb-6">
+              <div className="customer-dashboard-bookings-empty customer-dashboard-bookings-empty-responsive text-center py-8 lg:py-12">
+                <div className="customer-dashboard-bookings-empty-icon customer-dashboard-bookings-empty-icon-responsive text-4xl lg:text-6xl mb-4">
+                  📅
+                </div>
+                <h3 className="customer-dashboard-bookings-empty-title customer-dashboard-bookings-empty-title-responsive text-lg lg:text-xl font-semibold text-gray-600 mb-2">
+                  Belum Ada Reservasi
+                </h3>
+                <p className="customer-dashboard-bookings-empty-text customer-dashboard-bookings-empty-text-responsive text-gray-500 mb-6">
                   Anda belum memiliki reservasi venue. Mulai dengan membuat reservasi baru.
                 </p>
                 <button
                   onClick={() => (window.location.href = "/")}
-                  className="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors"
+                  className="customer-dashboard-bookings-empty-btn customer-dashboard-bookings-empty-btn-responsive bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors"
                 >
                   Buat Reservasi
                 </button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="customer-dashboard-bookings-list customer-dashboard-bookings-list-responsive space-y-4">
                 {bookings.slice(0, 5).map((booking) => (
                   <div
                     key={booking.id}
-                    className="border border-gray-200 rounded-2xl p-4 lg:p-6 hover:shadow-md transition-shadow"
+                    className="customer-dashboard-booking customer-dashboard-booking-item customer-dashboard-booking-responsive border border-gray-200 rounded-2xl p-4 lg:p-6 hover:shadow-md transition-shadow"
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
-                          <div>
-                            <h3 className="text-base lg:text-lg font-semibold text-gray-900 mb-1">
+                    <div className="customer-dashboard-booking-content customer-dashboard-booking-content-responsive flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                      <div className="customer-dashboard-booking-info customer-dashboard-booking-info-responsive flex-1">
+                        <div className="customer-dashboard-booking-header customer-dashboard-booking-header-responsive flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                          <div className="customer-dashboard-booking-title-section customer-dashboard-booking-title-section-responsive">
+                            <h3 className="customer-dashboard-booking-title customer-dashboard-booking-title-responsive text-base lg:text-lg font-semibold text-gray-900 mb-1">
                               {booking.eventName || "Event"}
                             </h3>
-                            <p className="text-sm text-gray-600 flex items-center">
-                              <FaBuilding className="mr-2 text-gray-400" />
+                            <p className="customer-dashboard-booking-venue customer-dashboard-booking-venue-responsive text-sm text-gray-600 flex items-center">
+                              <FaBuilding className="customer-dashboard-booking-venue-icon customer-dashboard-booking-venue-icon-responsive mr-2 text-gray-400" />
                               {booking.venueName || booking.roomName || "Venue"}
                             </p>
                           </div>
-                          <div className="flex items-center space-x-2">
+                          <div className="customer-dashboard-booking-status customer-dashboard-booking-status-responsive flex items-center space-x-2">
                             {getStatusIcon(booking.status)}
                             <span
-                              className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}
+                              className={`customer-dashboard-booking-status-badge customer-dashboard-booking-status-badge-responsive px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}
                             >
                               {getStatusText(booking.status)}
                             </span>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-600">Tanggal Acara</p>
-                            <p className="font-medium text-gray-900">
+                        <div className="customer-dashboard-booking-details customer-dashboard-booking-details-responsive grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                          <div className="customer-dashboard-booking-detail customer-dashboard-booking-detail-responsive">
+                            <p className="customer-dashboard-booking-detail-label customer-dashboard-booking-detail-label-responsive text-gray-600">
+                              Tanggal Acara
+                            </p>
+                            <p className="customer-dashboard-booking-detail-value customer-dashboard-booking-detail-value-responsive font-medium text-gray-900">
                               {formatDate(booking.eventDate || booking.checkIn)}
                             </p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">Jumlah Tamu</p>
-                            <p className="font-medium text-gray-900 flex items-center">
-                              <FaUsers className="mr-1 text-gray-400" />
+                          <div className="customer-dashboard-booking-detail customer-dashboard-booking-detail-responsive">
+                            <p className="customer-dashboard-booking-detail-label customer-dashboard-booking-detail-label-responsive text-gray-600">
+                              Jumlah Tamu
+                            </p>
+                            <p className="customer-dashboard-booking-detail-value customer-dashboard-booking-detail-value-responsive font-medium text-gray-900 flex items-center">
+                              <FaUsers className="customer-dashboard-booking-detail-icon customer-dashboard-booking-detail-icon-responsive mr-1 text-gray-400" />
                               {booking.guests || booking.guestCount || 0}
                             </p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">Total Biaya</p>
-                            <p className="font-medium text-blue-600">
+                          <div className="customer-dashboard-booking-detail customer-dashboard-booking-detail-responsive">
+                            <p className="customer-dashboard-booking-detail-label customer-dashboard-booking-detail-label-responsive text-gray-600">
+                              Total Biaya
+                            </p>
+                            <p className="customer-dashboard-booking-detail-value customer-dashboard-booking-detail-value-responsive font-medium text-blue-600">
                               Rp {(booking.totalAmount || 0).toLocaleString("id-ID")}
                             </p>
                           </div>
-                          <div>
-                            <p className="text-gray-600">Tanggal Reservasi</p>
-                            <p className="font-medium text-gray-900">{formatDate(booking.createdAt)}</p>
+                          <div className="customer-dashboard-booking-detail customer-dashboard-booking-detail-responsive">
+                            <p className="customer-dashboard-booking-detail-label customer-dashboard-booking-detail-label-responsive text-gray-600">
+                              Tanggal Reservasi
+                            </p>
+                            <p className="customer-dashboard-booking-detail-value customer-dashboard-booking-detail-value-responsive font-medium text-gray-900">
+                              {formatDate(booking.createdAt)}
+                            </p>
                           </div>
                         </div>
 
                         {booking.status === "approved" && (
-                          <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                            <p className="text-sm text-emerald-700">
-                              <FaCheckCircle className="inline mr-2" />
+                          <div className="customer-dashboard-booking-approved customer-dashboard-booking-approved-responsive mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                            <p className="customer-dashboard-booking-approved-text customer-dashboard-booking-approved-text-responsive text-sm text-emerald-700">
+                              <FaCheckCircle className="customer-dashboard-booking-approved-icon customer-dashboard-booking-approved-icon-responsive inline mr-2" />
                               Reservasi disetujui! Silakan lakukan pembayaran sesuai instruksi.
                             </p>
                           </div>
                         )}
 
                         {booking.status === "rejected" && booking.rejectionReason && (
-                          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm text-red-700">
-                              <FaTimesCircle className="inline mr-2" />
-                              <span className="font-medium">Ditolak:</span> {booking.rejectionReason}
+                          <div className="customer-dashboard-booking-rejected customer-dashboard-booking-rejected-responsive mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="customer-dashboard-booking-rejected-text customer-dashboard-booking-rejected-text-responsive text-sm text-red-700">
+                              <FaTimesCircle className="customer-dashboard-booking-rejected-icon customer-dashboard-booking-rejected-icon-responsive inline mr-2" />
+                              <span className="customer-dashboard-booking-rejected-label customer-dashboard-booking-rejected-label-responsive font-medium">
+                                Ditolak:
+                              </span>{" "}
+                              {booking.rejectionReason}
                             </p>
                           </div>
                         )}
                       </div>
 
-                      <div className="flex items-center space-x-2 lg:ml-4">
-                        <button className="w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center">
-                          <FaEye className="text-sm" />
+                      <div className="customer-dashboard-booking-actions customer-dashboard-booking-actions-responsive flex items-center space-x-2 lg:ml-4">
+                        <button className="customer-dashboard-booking-action customer-dashboard-booking-action-view customer-dashboard-booking-action-responsive w-8 h-8 lg:w-10 lg:h-10 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center">
+                          <FaEye className="customer-dashboard-booking-action-icon customer-dashboard-booking-action-icon-responsive text-sm" />
                         </button>
-                        <button className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors flex items-center justify-center">
-                          <FaDownload className="text-sm" />
+                        <button className="customer-dashboard-booking-action customer-dashboard-booking-action-download customer-dashboard-booking-action-responsive w-8 h-8 lg:w-10 lg:h-10 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors flex items-center justify-center">
+                          <FaDownload className="customer-dashboard-booking-action-icon customer-dashboard-booking-action-icon-responsive text-sm" />
                         </button>
                       </div>
                     </div>
@@ -377,10 +432,10 @@ const CustomerDashboard = () => {
                 ))}
 
                 {bookings.length > 5 && (
-                  <div className="text-center pt-4">
+                  <div className="customer-dashboard-bookings-more customer-dashboard-bookings-more-responsive text-center pt-4">
                     <button
                       onClick={() => (window.location.href = "/bookings")}
-                      className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                      className="customer-dashboard-bookings-more-btn customer-dashboard-bookings-more-btn-responsive text-blue-600 hover:text-blue-700 font-medium text-sm"
                     >
                       Lihat Semua Reservasi ({bookings.length})
                     </button>
@@ -392,48 +447,60 @@ const CustomerDashboard = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="customer-dashboard-actions customer-dashboard-actions-container customer-dashboard-actions-responsive mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <button
             onClick={() => (window.location.href = "/")}
-            className="bg-blue-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-blue-600 transition-colors text-left"
+            className="customer-dashboard-action customer-dashboard-action-new customer-dashboard-action-responsive bg-blue-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-blue-600 transition-colors text-left"
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-400 rounded-xl flex items-center justify-center">
-                <FaCalendarAlt className="text-white" />
+            <div className="customer-dashboard-action-content customer-dashboard-action-content-responsive flex items-center space-x-3">
+              <div className="customer-dashboard-action-icon customer-dashboard-action-icon-responsive w-10 h-10 bg-blue-400 rounded-xl flex items-center justify-center">
+                <FaCalendarAlt className="customer-dashboard-action-icon-inner customer-dashboard-action-icon-inner-responsive text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold">Buat Reservasi Baru</h3>
-                <p className="text-sm text-blue-100">Pilih venue untuk acara Anda</p>
+              <div className="customer-dashboard-action-text customer-dashboard-action-text-responsive">
+                <h3 className="customer-dashboard-action-title customer-dashboard-action-title-responsive font-semibold">
+                  Buat Reservasi Baru
+                </h3>
+                <p className="customer-dashboard-action-desc customer-dashboard-action-desc-responsive text-sm text-blue-100">
+                  Pilih venue untuk acara Anda
+                </p>
               </div>
             </div>
           </button>
 
           <button
             onClick={() => (window.location.href = "/bookings")}
-            className="bg-emerald-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-emerald-600 transition-colors text-left"
+            className="customer-dashboard-action customer-dashboard-action-manage customer-dashboard-action-responsive bg-emerald-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-emerald-600 transition-colors text-left"
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-emerald-400 rounded-xl flex items-center justify-center">
-                <FaBuilding className="text-white" />
+            <div className="customer-dashboard-action-content customer-dashboard-action-content-responsive flex items-center space-x-3">
+              <div className="customer-dashboard-action-icon customer-dashboard-action-icon-responsive w-10 h-10 bg-emerald-400 rounded-xl flex items-center justify-center">
+                <FaBuilding className="customer-dashboard-action-icon-inner customer-dashboard-action-icon-inner-responsive text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold">Kelola Reservasi</h3>
-                <p className="text-sm text-emerald-100">Lihat dan kelola reservasi Anda</p>
+              <div className="customer-dashboard-action-text customer-dashboard-action-text-responsive">
+                <h3 className="customer-dashboard-action-title customer-dashboard-action-title-responsive font-semibold">
+                  Kelola Reservasi
+                </h3>
+                <p className="customer-dashboard-action-desc customer-dashboard-action-desc-responsive text-sm text-emerald-100">
+                  Lihat dan kelola reservasi Anda
+                </p>
               </div>
             </div>
           </button>
 
           <button
             onClick={() => (window.location.href = "/services")}
-            className="bg-purple-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-purple-600 transition-colors text-left"
+            className="customer-dashboard-action customer-dashboard-action-services customer-dashboard-action-responsive bg-purple-500 text-white p-4 lg:p-6 rounded-2xl hover:bg-purple-600 transition-colors text-left"
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-purple-400 rounded-xl flex items-center justify-center">
-                <FaMoneyBillWave className="text-white" />
+            <div className="customer-dashboard-action-content customer-dashboard-action-content-responsive flex items-center space-x-3">
+              <div className="customer-dashboard-action-icon customer-dashboard-action-icon-responsive w-10 h-10 bg-purple-400 rounded-xl flex items-center justify-center">
+                <FaMoneyBillWave className="customer-dashboard-action-icon-inner customer-dashboard-action-icon-inner-responsive text-white" />
               </div>
-              <div>
-                <h3 className="font-semibold">Layanan Tambahan</h3>
-                <p className="text-sm text-purple-100">Pesan layanan untuk acara Anda</p>
+              <div className="customer-dashboard-action-text customer-dashboard-action-text-responsive">
+                <h3 className="customer-dashboard-action-title customer-dashboard-action-title-responsive font-semibold">
+                  Layanan Tambahan
+                </h3>
+                <p className="customer-dashboard-action-desc customer-dashboard-action-desc-responsive text-sm text-purple-100">
+                  Pesan layanan untuk acara Anda
+                </p>
               </div>
             </div>
           </button>

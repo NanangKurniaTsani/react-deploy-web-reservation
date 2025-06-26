@@ -193,81 +193,99 @@ const MyBookings = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <FaSpinner className="animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600">Memuat reservasi Anda...</p>
+      <div className="my-bookings-loading my-bookings-loading-container my-bookings-loading-responsive min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="my-bookings-loading-content my-bookings-loading-content-responsive text-center">
+          <FaSpinner className="my-bookings-loading-spinner my-bookings-loading-spinner-responsive animate-spin h-12 w-12 text-blue-500 mx-auto mb-4" />
+          <p className="my-bookings-loading-text my-bookings-loading-text-responsive text-gray-600">
+            Memuat reservasi Anda...
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Reservasi Saya</h1>
-          <p className="text-gray-600">Kelola dan pantau status reservasi venue Anda</p>
+    <div className="my-bookings my-bookings-container my-bookings-responsive min-h-screen bg-gray-50">
+      <div className="my-bookings-content my-bookings-content-container my-bookings-content-responsive container mx-auto px-4 py-6">
+        <div className="my-bookings-header my-bookings-header-container my-bookings-header-responsive mb-6">
+          <h1 className="my-bookings-title my-bookings-title-responsive text-2xl font-bold text-gray-900 mb-2">
+            Reservasi Saya
+          </h1>
+          <p className="my-bookings-subtitle my-bookings-subtitle-responsive text-gray-600">
+            Kelola dan pantau status reservasi venue Anda
+          </p>
         </div>
 
         {userRole !== "admin" && (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-                  <div className="text-sm text-gray-600">Total Reservasi</div>
+          <div className="my-bookings-stats my-bookings-stats-container my-bookings-stats-responsive grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div className="my-bookings-stat my-bookings-stat-total my-bookings-stat-responsive bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="my-bookings-stat-content my-bookings-stat-content-responsive flex items-center justify-between">
+                <div className="my-bookings-stat-info my-bookings-stat-info-responsive">
+                  <div className="my-bookings-stat-number my-bookings-stat-number-responsive text-2xl font-bold text-gray-900">
+                    {stats.total}
+                  </div>
+                  <div className="my-bookings-stat-label my-bookings-stat-label-responsive text-sm text-gray-600">
+                    Total Reservasi
+                  </div>
                 </div>
-                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <FaCalendarAlt className="text-blue-600" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
-                  <div className="text-sm text-gray-600">Menunggu</div>
-                </div>
-                <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                  <FaSyncAlt className="text-amber-600" />
+                <div className="my-bookings-stat-icon my-bookings-stat-icon-responsive w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <FaCalendarAlt className="my-bookings-stat-icon-inner my-bookings-stat-icon-inner-responsive text-blue-600" />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-2xl font-bold text-emerald-600">{stats.approved}</div>
-                  <div className="text-sm text-gray-600">Disetujui</div>
+            <div className="my-bookings-stat my-bookings-stat-pending my-bookings-stat-responsive bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="my-bookings-stat-content my-bookings-stat-content-responsive flex items-center justify-between">
+                <div className="my-bookings-stat-info my-bookings-stat-info-responsive">
+                  <div className="my-bookings-stat-number my-bookings-stat-number-responsive text-2xl font-bold text-amber-600">
+                    {stats.pending}
+                  </div>
+                  <div className="my-bookings-stat-label my-bookings-stat-label-responsive text-sm text-gray-600">
+                    Menunggu
+                  </div>
                 </div>
-                <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                  <FaCheckCircle className="text-emerald-600" />
+                <div className="my-bookings-stat-icon my-bookings-stat-icon-responsive w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <FaSyncAlt className="my-bookings-stat-icon-inner my-bookings-stat-icon-inner-responsive text-amber-600" />
+                </div>
+              </div>
+            </div>
+
+            <div className="my-bookings-stat my-bookings-stat-approved my-bookings-stat-responsive bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <div className="my-bookings-stat-content my-bookings-stat-content-responsive flex items-center justify-between">
+                <div className="my-bookings-stat-info my-bookings-stat-info-responsive">
+                  <div className="my-bookings-stat-number my-bookings-stat-number-responsive text-2xl font-bold text-emerald-600">
+                    {stats.approved}
+                  </div>
+                  <div className="my-bookings-stat-label my-bookings-stat-label-responsive text-sm text-gray-600">
+                    Disetujui
+                  </div>
+                </div>
+                <div className="my-bookings-stat-icon my-bookings-stat-icon-responsive w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                  <FaCheckCircle className="my-bookings-stat-icon-inner my-bookings-stat-icon-inner-responsive text-emerald-600" />
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="flex-1 relative">
-            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <div className="my-bookings-filters my-bookings-filters-container my-bookings-filters-responsive flex flex-col md:flex-row gap-4 mb-6">
+          <div className="my-bookings-search my-bookings-search-container my-bookings-search-responsive flex-1 relative">
+            <FaSearch className="my-bookings-search-icon my-bookings-search-icon-responsive absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Cari reservasi..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="my-bookings-search-input my-bookings-search-input-responsive w-full pl-12 pr-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
-          <div className="flex items-center space-x-2">
-            <FaFilter className="text-gray-400" />
+          <div className="my-bookings-filter my-bookings-filter-container my-bookings-filter-responsive flex items-center space-x-2">
+            <FaFilter className="my-bookings-filter-icon my-bookings-filter-icon-responsive text-gray-400" />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="my-bookings-filter-select my-bookings-filter-select-responsive px-4 py-3 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="all">Semua Status</option>
               <option value="pending">Menunggu</option>
@@ -277,8 +295,8 @@ const MyBookings = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-2 mb-6 shadow-sm border border-gray-200">
-          <div className="flex space-x-1">
+        <div className="my-bookings-tabs my-bookings-tabs-container my-bookings-tabs-responsive bg-white rounded-2xl p-2 mb-6 shadow-sm border border-gray-200">
+          <div className="my-bookings-tabs-nav my-bookings-tabs-nav-responsive flex space-x-1">
             {[
               { id: "all", name: "Semua" },
               { id: "pending", name: "Menunggu" },
@@ -288,7 +306,7 @@ const MyBookings = () => {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id)}
-                className={`flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all duration-200 ${
+                className={`my-bookings-tab my-bookings-tab-responsive flex-1 py-2 px-4 rounded-xl text-sm font-medium transition-all duration-200 ${
                   filter === tab.id ? "bg-blue-500 text-white shadow-md" : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
@@ -299,12 +317,12 @@ const MyBookings = () => {
         </div>
 
         {filteredBookings.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-200">
-            <div className="text-6xl mb-4">📅</div>
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+          <div className="my-bookings-empty my-bookings-empty-container my-bookings-empty-responsive bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-200">
+            <div className="my-bookings-empty-icon my-bookings-empty-icon-responsive text-6xl mb-4">📅</div>
+            <h3 className="my-bookings-empty-title my-bookings-empty-title-responsive text-xl font-semibold text-gray-600 mb-2">
               {bookings.length === 0 ? "Belum Ada Reservasi" : "Tidak Ada Data"}
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="my-bookings-empty-text my-bookings-empty-text-responsive text-gray-500 mb-6">
               {bookings.length === 0
                 ? "Anda belum memiliki reservasi venue. Mulai dengan membuat reservasi baru."
                 : "Tidak ada reservasi dengan filter yang dipilih."}
@@ -312,79 +330,109 @@ const MyBookings = () => {
             {bookings.length === 0 && (
               <button
                 onClick={() => (window.location.href = "/")}
-                className="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors"
+                className="my-bookings-empty-btn my-bookings-empty-btn-responsive bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors"
               >
                 Buat Reservasi
               </button>
             )}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="my-bookings-list my-bookings-list-container my-bookings-list-responsive space-y-4">
             {filteredBookings.map((booking) => (
-              <div key={booking.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">{booking.eventName}</h3>
-                      <p className="text-gray-600 text-sm">{booking.roomName || booking.venueName}</p>
+              <div
+                key={booking.id}
+                className="my-bookings-item my-bookings-item-card my-bookings-item-responsive bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <div className="my-bookings-item-content my-bookings-item-content-responsive p-6">
+                  <div className="my-bookings-item-header my-bookings-item-header-responsive flex justify-between items-start mb-4">
+                    <div className="my-bookings-item-info my-bookings-item-info-responsive">
+                      <h3 className="my-bookings-item-title my-bookings-item-title-responsive text-lg font-semibold text-gray-900 mb-1">
+                        {booking.eventName}
+                      </h3>
+                      <p className="my-bookings-item-venue my-bookings-item-venue-responsive text-gray-600 text-sm">
+                        {booking.roomName || booking.venueName}
+                      </p>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="my-bookings-item-actions my-bookings-item-actions-responsive flex items-center space-x-2">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}
+                        className={`my-bookings-item-status my-bookings-item-status-responsive px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(booking.status)}`}
                       >
                         {getStatusText(booking.status)}
                       </span>
                       <button
                         onClick={() => handleDownloadCard(booking)}
-                        className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors flex items-center justify-center"
+                        className="my-bookings-item-download my-bookings-item-download-responsive w-8 h-8 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors flex items-center justify-center"
                         title="Download Kartu Reservasi"
                       >
-                        <FaDownload className="text-sm" />
+                        <FaDownload className="my-bookings-item-download-icon my-bookings-item-download-icon-responsive text-sm" />
                       </button>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Tanggal Acara</p>
-                      <p className="font-medium text-gray-900">{formatDate(booking.eventDate)}</p>
+                  <div className="my-bookings-item-details my-bookings-item-details-responsive grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="my-bookings-item-detail my-bookings-item-detail-responsive">
+                      <p className="my-bookings-item-detail-label my-bookings-item-detail-label-responsive text-sm text-gray-600">
+                        Tanggal Acara
+                      </p>
+                      <p className="my-bookings-item-detail-value my-bookings-item-detail-value-responsive font-medium text-gray-900">
+                        {formatDate(booking.eventDate)}
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Tanggal Reservasi</p>
-                      <p className="font-medium text-gray-900">{formatDate(booking.createdAt)}</p>
+                    <div className="my-bookings-item-detail my-bookings-item-detail-responsive">
+                      <p className="my-bookings-item-detail-label my-bookings-item-detail-label-responsive text-sm text-gray-600">
+                        Tanggal Reservasi
+                      </p>
+                      <p className="my-bookings-item-detail-value my-bookings-item-detail-value-responsive font-medium text-gray-900">
+                        {formatDate(booking.createdAt)}
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Jumlah Tamu</p>
-                      <p className="font-medium text-gray-900">{booking.guestCount} orang</p>
+                    <div className="my-bookings-item-detail my-bookings-item-detail-responsive">
+                      <p className="my-bookings-item-detail-label my-bookings-item-detail-label-responsive text-sm text-gray-600">
+                        Jumlah Tamu
+                      </p>
+                      <p className="my-bookings-item-detail-value my-bookings-item-detail-value-responsive font-medium text-gray-900">
+                        {booking.guestCount} orang
+                      </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Total Biaya</p>
-                      <p className="font-medium text-blue-600">
+                    <div className="my-bookings-item-detail my-bookings-item-detail-responsive">
+                      <p className="my-bookings-item-detail-label my-bookings-item-detail-label-responsive text-sm text-gray-600">
+                        Total Biaya
+                      </p>
+                      <p className="my-bookings-item-detail-value my-bookings-item-detail-value-responsive font-medium text-blue-600">
                         Rp {booking.totalAmount?.toLocaleString("id-ID") || "0"}
                       </p>
                     </div>
                   </div>
 
                   {booking.description && (
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-600 mb-1">Deskripsi</p>
-                      <p className="text-gray-900 text-sm bg-gray-50 p-3 rounded-lg">{booking.description}</p>
+                    <div className="my-bookings-item-description my-bookings-item-description-responsive mb-4">
+                      <p className="my-bookings-item-description-label my-bookings-item-description-label-responsive text-sm text-gray-600 mb-1">
+                        Deskripsi
+                      </p>
+                      <p className="my-bookings-item-description-text my-bookings-item-description-text-responsive text-gray-900 text-sm bg-gray-50 p-3 rounded-lg">
+                        {booking.description}
+                      </p>
                     </div>
                   )}
 
                   {booking.status === "rejected" && booking.rejectionReason && userRole === "admin" && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                      <p className="text-sm text-red-700">
-                        <span className="font-medium">Alasan Penolakan:</span> {booking.rejectionReason}
+                    <div className="my-bookings-item-rejection my-bookings-item-rejection-responsive bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="my-bookings-item-rejection-text my-bookings-item-rejection-text-responsive text-sm text-red-700">
+                        <span className="my-bookings-item-rejection-label my-bookings-item-rejection-label-responsive font-medium">
+                          Alasan Penolakan:
+                        </span>{" "}
+                        {booking.rejectionReason}
                       </p>
                     </div>
                   )}
 
                   {booking.status === "approved" && (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                      <p className="text-sm text-emerald-700">
-                        <span className="font-medium">Status:</span> Reservasi Anda telah disetujui! Silakan lakukan
-                        pembayaran sesuai instruksi.
+                    <div className="my-bookings-item-approved my-bookings-item-approved-responsive bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                      <p className="my-bookings-item-approved-text my-bookings-item-approved-text-responsive text-sm text-emerald-700">
+                        <span className="my-bookings-item-approved-label my-bookings-item-approved-label-responsive font-medium">
+                          Status:
+                        </span>{" "}
+                        Reservasi Anda telah disetujui! Silakan lakukan pembayaran sesuai instruksi.
                       </p>
                     </div>
                   )}
@@ -395,8 +443,8 @@ const MyBookings = () => {
         )}
 
         {showCard && selectedBooking && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <div className="my-bookings-modal my-bookings-modal-overlay my-bookings-modal-responsive fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="my-bookings-modal-content my-bookings-modal-content-responsive bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
               <ReservationCard booking={selectedBooking} onClose={() => setShowCard(false)} />
             </div>
           </div>

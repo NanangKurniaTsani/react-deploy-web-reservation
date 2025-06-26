@@ -1,6 +1,5 @@
 import Swal from "sweetalert2"
 
-// Custom SweetAlert configurations
 export const showSuccessAlert = (title, text, timer = 3000) => {
   return Swal.fire({
     icon: "success",

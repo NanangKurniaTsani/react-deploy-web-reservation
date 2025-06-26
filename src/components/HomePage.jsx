@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext"
 import { useBackButton } from "../hooks/UseBackButton.js"
 import VenueCard from "./VenueCard"
 import VenueDetailModal from "./VenueDetailModal"
-import BookingForm from "./BookingForm"
+import BookingForm from "./BookingForm.jsx"
 import { FaSearch } from "react-icons/fa"
 import toast from "react-hot-toast"
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore"
@@ -26,7 +26,6 @@ const HomePage = () => {
   const [userBookings, setUserBookings] = useState([])
   const [venueToBook, setVenueToBook] = useState(null)
 
-  // Implementasi useBackButton
   useBackButton(() => {
     if (showDetailModal) {
       setShowDetailModal(false)
@@ -37,7 +36,7 @@ const HomePage = () => {
     }
   })
 
-   const kingRoyalVenues = [
+  const kingRoyalVenues = [
     {
       docId: "santorini-ballroom",
       id: "santorini-ballroom",
@@ -245,13 +244,12 @@ const HomePage = () => {
       ],
     },
   ]
+
   const fetchUserBookings = async () => {
     if (!currentUser) return
 
     try {
-      const q = query(collection(db, "bookings"), 
-        where("userId", "==", currentUser.uid), 
-        orderBy("createdAt", "desc"))
+      const q = query(collection(db, "bookings"), where("userId", "==", currentUser.uid), orderBy("createdAt", "desc"))
       const querySnapshot = await getDocs(q)
       const bookingsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -326,11 +324,10 @@ const HomePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 mobile-safe-area">
-      {/* Modal Booking Form */}
+    <div className="home-page home-page-container home-page-responsive min-h-screen bg-gray-50 mobile-safe-area">
       {venueToBook && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 mobile-p-4">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="home-page-booking-modal home-page-booking-modal-overlay home-page-booking-modal-responsive fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 mobile-p-4">
+          <div className="home-page-booking-modal-content home-page-booking-modal-content-responsive bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <BookingForm
               selectedRoom={venueToBook}
               onSuccess={() => {
@@ -348,15 +345,14 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Navigation Tabs */}
       {userRole !== "admin" && (
-        <div className="bg-white shadow-sm mobile-safe-area-top">
-          <div className="container mx-auto px-4 mobile-px-4">
-            <div className="flex justify-center py-4 mobile-py-4">
-              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mobile-tabs">
+        <div className="home-page-tabs home-page-tabs-container home-page-tabs-responsive bg-white shadow-sm mobile-safe-area-top">
+          <div className="home-page-tabs-content home-page-tabs-content-responsive container mx-auto px-4 mobile-px-4">
+            <div className="home-page-tabs-nav home-page-tabs-nav-responsive flex justify-center py-4 mobile-py-4">
+              <div className="home-page-tabs-wrapper home-page-tabs-wrapper-responsive flex space-x-1 bg-gray-100 p-1 rounded-lg mobile-tabs">
                 <button
                   onClick={() => handleTabChange("beranda")}
-                  className={`px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
+                  className={`home-page-tab home-page-tab-beranda home-page-tab-responsive px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
                     activeTab === "beranda"
                       ? "bg-white shadow text-blue-600 mobile-tab-active"
                       : "text-gray-600 hover:text-gray-900"
@@ -368,7 +364,7 @@ const HomePage = () => {
                   <>
                     <button
                       onClick={() => handleTabChange("reservasi")}
-                      className={`px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
+                      className={`home-page-tab home-page-tab-reservasi home-page-tab-responsive px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
                         activeTab === "reservasi"
                           ? "bg-white shadow text-blue-600 mobile-tab-active"
                           : "text-gray-600 hover:text-gray-900"
@@ -378,7 +374,7 @@ const HomePage = () => {
                     </button>
                     <button
                       onClick={() => handleTabChange("kalender")}
-                      className={`px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
+                      className={`home-page-tab home-page-tab-kalender home-page-tab-responsive px-6 py-2 mobile-tab-item mobile-touch-target rounded-md font-medium transition-colors ${
                         activeTab === "kalender"
                           ? "bg-white shadow text-blue-600 mobile-tab-active"
                           : "text-gray-600 hover:text-gray-900"
@@ -394,64 +390,62 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Main Content */}
       {(activeTab === "beranda" || userRole === "admin") && (
-        <div className="container mx-auto px-4 py-8 mobile-px-4 mobile-py-6">
-          <div className="text-center mb-8 mobile-mb-6">
-            <h1 className="text-3xl mobile-text-2xl font-bold text-gray-900 mb-2">King Royal Hotel</h1>
-            <p className="text-gray-600 mb-6 mobile-mb-6 text-base mobile-text-base">
-              Luxury accommodation experience
-            </p>
+        <div className="home-page-main home-page-main-container home-page-main-responsive container mx-auto px-4 py-8 mobile-px-4 mobile-py-6">
+          <div className="home-page-header home-page-header-container home-page-header-responsive text-center mb-8 mobile-mb-6">
 
-            <div className="max-w-md mx-auto mb-6 mobile-mb-6">
-              <div className="relative">
-                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 mobile-icon-sm" />
+
+            <div className="home-page-search home-page-search-container home-page-search-responsive max-w-md mx-auto mb-6 mobile-mb-6">
+              <div className="home-page-search-wrapper home-page-search-wrapper-responsive relative">
+                <FaSearch className="home-page-search-icon home-page-search-icon-responsive absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 mobile-icon-sm" />
                 <input
                   type="text"
                   placeholder="Cari venue..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 mobile-form-input bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="home-page-search-input home-page-search-input-responsive w-full pl-10 pr-4 py-3 mobile-form-input bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
-            <div className="flex justify-center mb-8 mobile-mb-6">
-              <div className="inline-flex bg-white rounded-lg p-1 shadow-sm border border-gray-200 overflow-x-auto mobile-filter-chips">
+            <div className="home-page-filters home-page-filters-container home-page-filters-responsive flex justify-center mb-8 mobile-mb-6">
+              <div className="home-page-filters-wrapper home-page-filters-wrapper-responsive flex gap-2 overflow-x-auto mobile-filter-chips">
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className={`px-4 sm:px-6 py-2 mobile-filter-chip mobile-touch-target rounded-md font-medium transition-colors whitespace-nowrap ${
-                    selectedCategory === "all" ? "bg-blue-500 text-white active" : "text-gray-600 hover:text-gray-900"
+                  className={`home-page-filter home-page-filter-all home-page-filter-responsive px-4 py-2 mobile-filter-chip mobile-touch-target rounded-full font-medium transition-colors whitespace-nowrap border ${
+                    selectedCategory === "all" 
+                      ? "bg-blue-500 text-white border-blue-500" 
+                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   Semua Venue
                 </button>
                 <button
                   onClick={() => setSelectedCategory("ballroom")}
-                  className={`px-4 sm:px-6 py-2 mobile-filter-chip mobile-touch-target rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`home-page-filter home-page-filter-ballroom home-page-filter-responsive px-4 py-2 mobile-filter-chip mobile-touch-target rounded-full font-medium transition-colors whitespace-nowrap border ${
                     selectedCategory === "ballroom"
-                      ? "bg-blue-500 text-white active"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   Ballroom
                 </button>
                 <button
                   onClick={() => setSelectedCategory("meeting")}
-                  className={`px-4 sm:px-6 py-2 mobile-filter-chip mobile-touch-target rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`home-page-filter home-page-filter-meeting home-page-filter-responsive px-4 py-2 mobile-filter-chip mobile-touch-target rounded-full font-medium transition-colors whitespace-nowrap border ${
                     selectedCategory === "meeting"
-                      ? "bg-blue-500 text-white active"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   Meeting Room
                 </button>
                 <button
                   onClick={() => setSelectedCategory("outdoor")}
-                  className={`px-4 sm:px-6 py-2 mobile-filter-chip mobile-touch-target rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`home-page-filter home-page-filter-outdoor home-page-filter-responsive px-4 py-2 mobile-filter-chip mobile-touch-target rounded-full font-medium transition-colors whitespace-nowrap border ${
                     selectedCategory === "outdoor"
-                      ? "bg-blue-500 text-white active"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? "bg-blue-500 text-white border-blue-500"
+                      : "text-gray-600 hover:text-gray-900 border-gray-300 hover:border-gray-400"
                   }`}
                 >
                   Outdoor
@@ -461,23 +455,23 @@ const HomePage = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mobile-card-grid">
+            <div className="home-page-loading home-page-loading-container home-page-loading-responsive grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mobile-card-grid">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse mobile-card"
+                  className="home-page-loading-item home-page-loading-item-responsive bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse mobile-card"
                 >
-                  <div className="h-48 bg-gray-200 mobile-mb-4"></div>
-                  <div className="p-4 space-y-3 mobile-space-y-3">
-                    <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                    <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+                  <div className="home-page-loading-image home-page-loading-image-responsive h-48 bg-gray-200 mobile-mb-4"></div>
+                  <div className="home-page-loading-content home-page-loading-content-responsive p-4 space-y-3 mobile-space-y-3">
+                    <div className="home-page-loading-title home-page-loading-title-responsive h-5 bg-gray-200 rounded w-3/4"></div>
+                    <div className="home-page-loading-subtitle home-page-loading-subtitle-responsive h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="home-page-loading-price home-page-loading-price-responsive h-8 bg-gray-200 rounded w-1/3"></div>
                   </div>
                 </div>
               ))}
             </div>
           ) : filteredVenues.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mobile-card-grid">
+            <div className="home-page-venues home-page-venues-container home-page-venues-responsive grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mobile-card-grid">
               {filteredVenues.map((venue) => (
                 <VenueCard
                   key={venue.docId || venue.id}
@@ -491,10 +485,14 @@ const HomePage = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 mobile-py-6">
-              <div className="text-6xl mobile-text-2xl mb-4">🔍</div>
-              <h3 className="text-xl mobile-text-lg font-semibold text-gray-600 mb-2">Tidak Ada Venue Ditemukan</h3>
-              <p className="text-gray-500 mobile-text-sm">
+            <div className="home-page-empty home-page-empty-container home-page-empty-responsive text-center py-16 mobile-py-6">
+              <div className="home-page-empty-icon home-page-empty-icon-responsive text-6xl mobile-text-2xl mb-4">
+                🔍
+              </div>
+              <h3 className="home-page-empty-title home-page-empty-title-responsive text-xl mobile-text-lg font-semibold text-gray-600 mb-2">
+                Tidak Ada Venue Ditemukan
+              </h3>
+              <p className="home-page-empty-text home-page-empty-text-responsive text-gray-500 mobile-text-sm">
                 {searchTerm
                   ? `Tidak ada venue yang sesuai dengan pencarian "${searchTerm}".`
                   : "Tidak ada venue yang sesuai dengan filter yang dipilih."}

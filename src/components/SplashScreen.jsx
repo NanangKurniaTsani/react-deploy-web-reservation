@@ -3,14 +3,13 @@
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { FaArrowRight } from "react-icons/fa"
-import {useBackButton} from "../hooks/UseBackButton.js"
-
+import { useBackButton } from "../hooks/UseBackButton.js"
 
 const SplashScreen = ({ onComplete }) => {
   useBackButton(() => {
     localStorage.setItem("hasSeenSplash", "true")
     onComplete()
-  });
+  })
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const slides = [
@@ -54,67 +53,71 @@ const SplashScreen = ({ onComplete }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-white z-50 flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-center p-4">
-        <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+    <div className="splash-screen splash-screen-container splash-screen-responsive fixed inset-0 bg-white z-50 flex flex-col">
+      <div className="splash-header splash-header-container splash-header-responsive flex justify-between items-center p-4 sm:p-6">
+        <div className="splash-logo splash-logo-container splash-logo-responsive w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
           <img
             src="src/assets/icon_hotel.png"
             alt="Grand Hotel"
-            className="w-6 h-6 object-contain"
+            className="splash-logo-image splash-logo-image-responsive w-6 h-6 sm:w-8 sm:h-8 object-contain"
             onError={(e) => {
               e.target.style.display = "none"
               e.target.nextSibling.style.display = "block"
             }}
           />
-          <span className="text-white font-bold text-lg hidden" style={{ display: "none" }}>
+          <span
+            className="splash-logo-text splash-logo-text-responsive text-white font-bold text-lg sm:text-xl hidden"
+            style={{ display: "none" }}
+          >
             GH
           </span>
         </div>
-        <button onClick={handleSkip} className="text-gray-500 hover:text-gray-700 font-medium">
+        <button
+          onClick={handleSkip}
+          className="splash-skip splash-skip-button splash-skip-responsive text-gray-500 hover:text-gray-700 font-medium text-sm sm:text-base px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
           Skip
         </button>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6">
-        {/* Image */}
-        <div className="w-80 h-80 mb-8 relative overflow-hidden rounded-3xl shadow-2xl">
+      <div className="splash-content splash-content-container splash-content-responsive flex-1 flex flex-col items-center justify-center px-4 sm:px-6">
+        <div className="splash-image splash-image-container splash-image-responsive w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 mb-6 sm:mb-8 relative overflow-hidden rounded-3xl shadow-2xl">
           <img
             src={slides[currentSlide].image || "/placeholder.svg"}
             alt={slides[currentSlide].title}
-            className="w-full h-full object-cover"
+            className="splash-slide-image splash-slide-image-responsive w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+          <div className="splash-image-overlay splash-image-overlay-responsive absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
 
-        {/* Dots Indicator */}
-        <div className="flex space-x-2 mb-6">
+        <div className="splash-indicators splash-indicators-container splash-indicators-responsive flex space-x-2 mb-4 sm:mb-6">
           {slides.map((_, index) => (
             <div
               key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide ? "bg-green-500 w-6" : "bg-gray-300"
+              className={`splash-dot splash-dot-responsive w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide ? "bg-green-500 w-6 sm:w-8" : "bg-gray-300"
               }`}
             />
           ))}
         </div>
 
-        {/* Text Content */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">{slides[currentSlide].title}</h1>
-          <p className="text-gray-600 leading-relaxed px-4">{slides[currentSlide].subtitle}</p>
+        <div className="splash-text splash-text-container splash-text-responsive text-center mb-6 sm:mb-8 max-w-sm sm:max-w-md">
+          <h1 className="splash-title splash-title-responsive text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">
+            {slides[currentSlide].title}
+          </h1>
+          <p className="splash-subtitle splash-subtitle-responsive text-gray-600 leading-relaxed px-2 sm:px-4 text-sm sm:text-base">
+            {slides[currentSlide].subtitle}
+          </p>
         </div>
       </div>
 
-      {/* Bottom Button */}
-      <div className="p-6">
+      <div className="splash-footer splash-footer-container splash-footer-responsive p-4 sm:p-6">
         <button
           onClick={handleGetStarted}
-          className="w-full bg-green-500 text-white py-4 rounded-2xl hover:bg-green-600 transition-colors font-semibold text-lg flex items-center justify-center space-x-2 shadow-lg"
+          className="splash-button splash-button-cta splash-button-responsive w-full bg-green-500 text-white py-3 sm:py-4 px-6 rounded-2xl hover:bg-green-600 transition-colors font-semibold text-base sm:text-lg flex items-center justify-center space-x-2 shadow-lg active:scale-95"
         >
           <span>Get Started</span>
-          <FaArrowRight className="text-sm" />
+          <FaArrowRight className="splash-button-icon splash-button-icon-responsive text-sm" />
         </button>
       </div>
     </div>
