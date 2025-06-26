@@ -1,13 +1,14 @@
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
-import path from "path"
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
-  base: "/react-deploy-web-reservation/",
+  // ✅ Jangan pakai subfolder jika deploy di root
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, 'src'),
     },
   },
   server: {
@@ -15,25 +16,33 @@ export default defineConfig({
     open: true,
     cors: true,
     headers: {
-      "Cross-Origin-Embedder-Policy": "unsafe-none",
-      "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
     },
   },
   define: {
-    global: "globalThis",
+    global: 'globalThis',
   },
   optimizeDeps: {
-    include: ["firebase/app", "firebase/auth", "firebase/firestore"],
+    include: [
+      'firebase/app',
+      'firebase/auth',
+      'firebase/firestore',
+    ],
   },
   build: {
-    outDir: "dist",
+    outDir: 'dist',
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          firebase: ["firebase/app", "firebase/auth", "firebase/firestore"],
-          vendor: ["react", "react-dom"],
-          icons: ["react-icons", "lucide-react"],
+          firebase: [
+            'firebase/app',
+            'firebase/auth',
+            'firebase/firestore',
+          ],
+          vendor: ['react', 'react-dom'],
+          icons: ['react-icons', 'lucide-react'],
         },
       },
     },
