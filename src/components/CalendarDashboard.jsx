@@ -5,7 +5,7 @@ import { collection, query, where, getDocs } from "firebase/firestore"
 import { db } from "../config/firebase"
 import { useAuth } from "../context/AuthContext"
 import { FaCalendarAlt, FaSpinner, FaFilter } from "react-icons/fa"
-import { showErrorAlert } from "../utils/sweetAlert"
+import { showErrorAlert } from "../utils/sweetalert"
 import PropTypes from "prop-types"
 import { useBackButton } from "../hooks/UseBackButton"
 
