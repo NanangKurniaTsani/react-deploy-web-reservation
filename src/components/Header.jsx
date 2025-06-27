@@ -90,35 +90,32 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                 </div>
               )}
 
-              {/* Mobile Navigation untuk Admin */}
+              {/* Mobile Navigation untuk Admin - Modified to be smaller and shifted right */}
               {userRole === "admin" && (
-                <div className="header-mobile-nav header-mobile-nav-container header-mobile-nav-responsive sm:hidden flex space-x-1 bg-gray-100 p-1 rounded-lg mr-2">
+                <div className="header-mobile-nav header-mobile-nav-container header-mobile-nav-responsive sm:hidden flex space-x-1 bg-gray-100 p-1 rounded-lg ml-2">
                   <button
                     onClick={() => setCurrentView("home")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-home header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-home header-mobile-nav-btn-responsive p-1 rounded-md text-xs font-medium flex items-center ${
                       currentView === "home" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaHome className="text-xs" />
-                    <span>Beranda</span>
                   </button>
                   <button
                     onClick={() => setCurrentView("admin")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-admin header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-admin header-mobile-nav-btn-responsive p-1 rounded-md text-xs font-medium flex items-center ${
                       currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaChartBar className="text-xs" />
-                    <span>Panel Admin</span>
                   </button>
                   <button
                     onClick={() => setCurrentView("calendar")}
-                    className={`header-mobile-nav-btn header-mobile-nav-btn-calendar header-mobile-nav-btn-responsive px-1.5 py-0.5 rounded-md text-xs font-medium flex items-center space-x-1 ${
+                    className={`header-mobile-nav-btn header-mobile-nav-btn-calendar header-mobile-nav-btn-responsive p-1 rounded-md text-xs font-medium flex items-center ${
                       currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-600"
                     }`}
                   >
                     <FaCalendarAlt className="text-xs" />
-                    <span>Kalender</span>
                   </button>
                 </div>
               )}
