@@ -78,14 +78,14 @@ const HomePage = () => {
       toast.error("Admins cannot make bookings")
       return
     }
-    if (!currentUser) {
-      toast.error("Please login to make bookings")
-      return
-    }
     setVenueToBook(venue)
   }
 
   const handleTabChange = (tab) => {
+    if (tab === "reservasi" && !currentUser) {
+      toast.error("Please login to view bookings")
+      return
+    }
     setActiveTab(tab)
   }
 
@@ -107,44 +107,46 @@ const HomePage = () => {
         </div>
       )}
 
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center py-4">
-            <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-              <button
-                onClick={() => handleTabChange("beranda")}
-                className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                  activeTab === "beranda" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                Beranda
-              </button>
-              {currentUser && userRole === "customer" && (
-                <>
-                  <button
-                    onClick={() => handleTabChange("reservasi")}
-                    className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                      activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    Reservasi Saya
-                  </button>
-                  <button
-                    onClick={() => handleTabChange("kalender")}
-                    className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                      activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    Kalender
-                  </button>
-                </>
-              )}
+      {userRole !== "admin" && (
+        <div className="bg-white shadow-sm">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center py-4">
+              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                <button
+                  onClick={() => handleTabChange("beranda")}
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                    activeTab === "beranda" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Beranda
+                </button>
+                {currentUser && userRole === "customer" && (
+                  <>
+                    <button
+                      onClick={() => handleTabChange("reservasi")}
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                        activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Reservasi Saya
+                    </button>
+                    <button
+                      onClick={() => handleTabChange("kalender")}
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                        activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Kalender
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {activeTab === "beranda" && (
+      {(activeTab === "beranda" || userRole === "admin") && (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center mb-6">
             <div className="max-w-md mx-auto mb-6">
@@ -257,8 +259,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {activeTab === "reservasi" && currentUser && userRole === "customer" && <MyBookings />}
-      {activeTab === "kalender" && currentUser && userRole === "customer" && <CalendarDashboard />}
+      {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
+      {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard />}
     </div>
   )
 }
