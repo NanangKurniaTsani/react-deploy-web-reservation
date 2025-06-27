@@ -25,10 +25,17 @@ const HomePage = () => {
   const [venueToBook, setVenueToBook] = useState(null)
   const [activeTab, setActiveTab] = useState("beranda")
 
+  // Ensure tab is always "beranda" for non-customer users
+  useEffect(() => {
+    if (userRole !== "customer") {
+      setActiveTab("beranda")
+    }
+  }, [userRole])
+
   useBackButton(() => {
     if (showDetailModal) setShowDetailModal(false)
     else if (venueToBook) setVenueToBook(null)
-    else if (activeTab !== "beranda") setActiveTab("beranda")
+    else if (activeTab !== "beranda" && userRole === "customer") setActiveTab("beranda")
   })
 
   useEffect(() => {
@@ -46,8 +53,7 @@ const HomePage = () => {
         setLoading(false)
       },
       (error) => {
-        console.error("Error loading venues:", error)
-        toast.error("Failed to load venues")
+        console.error(error)
         setLoading(false)
       }
     )
@@ -82,7 +88,7 @@ const HomePage = () => {
   }
 
   const handleTabChange = (tab) => {
-    if (tab === "reservasi" && !currentUser) {
+    if (tab !== "beranda" && !currentUser) {
       toast.error("Please login to view bookings")
       return
     }
@@ -107,7 +113,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {currentUser && userRole === "customer" && (
+      {/* Only show navigation for customer users */}
+      {userRole === "customer" && (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
@@ -142,7 +149,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {(activeTab === "beranda" || userRole === "admin") && (
+      {/* Main content area */}
+      {activeTab === "beranda" && (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center mb-6">
             <div className="max-w-md mx-auto mb-6">
@@ -255,8 +263,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
-      {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard />}
+      {activeTab === "reservasi" && <MyBookings />}
+      {activeTab === "kalender" && <CalendarDashboard />}
     </div>
   )
 }
