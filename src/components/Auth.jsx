@@ -39,14 +39,23 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
   })
 
   const handleBack = () => {
+    console.log("handleBack called") // Debug log
+    console.log("onBack:", onBack) // Debug log
+    console.log("onSuccess:", onSuccess) // Debug log
+
     if (onBack) {
+      console.log("Calling onBack") // Debug log
       onBack()
     } else if (onSuccess) {
+      console.log("Calling onSuccess") // Debug log
       onSuccess()
+    } else {
+      console.log("No callback provided") // Debug log
     }
   }
 
   useBackButton(() => {
+    console.log("Browser back button pressed") // Debug log
     handleBack()
     return true
   })
@@ -184,59 +193,59 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
   }
 
   return (
-    <div className="auth-container auth-container-responsive min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="auth-wrapper auth-wrapper-container auth-wrapper-responsive w-full max-w-md">
+    <div className="auth-container min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+      <div className="auth-wrapper w-full max-w-md">
         {/* Back Navigation */}
-        <div className="auth-back-nav auth-back-nav-container auth-back-nav-responsive mb-4">
+        <div className="auth-back-nav mb-4">
           <button
             onClick={handleBack}
-            className="auth-back-btn auth-back-btn-responsive flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors group"
+            type="button"
+            className="auth-back-btn flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors group"
           >
-            <div className="auth-back-icon auth-back-icon-responsive w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm group-hover:shadow-md transition-shadow">
+            <div className="auth-back-icon w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm group-hover:shadow-md transition-shadow">
               <FaArrowLeft className="text-sm" />
             </div>
-            <span className="auth-back-text auth-back-text-responsive font-medium">Kembali ke Beranda</span>
+            <span className="auth-back-text font-medium">Kembali ke Beranda</span>
           </button>
         </div>
 
-        <div className="auth-header auth-header-container auth-header-responsive text-center mb-8">
-          <div className="auth-logo auth-logo-container auth-logo-responsive flex items-center justify-center cursor-pointer mx-auto w-max">
-            <div className="auth-logo-icon auth-logo-icon-responsive w-12 h-12 flex items-center justify-center">
+        <div className="auth-header text-center mb-8">
+          <div className="auth-logo flex items-center justify-center cursor-pointer mx-auto w-max">
+            <div className="auth-logo-icon w-12 h-12 flex items-center justify-center">
               <img
                 src={icon_hotel || "/placeholder.svg?height=48&width=48"}
                 alt="Grand Hotel"
-                className="auth-logo-image auth-logo-image-responsive h-full w-full object-contain"
+                className="auth-logo-image h-full w-full object-contain"
               />
             </div>
           </div>
-          <p className="auth-subtitle auth-subtitle-responsive text-gray-600 mt-2">
+          <p className="auth-subtitle text-gray-600 mt-2">
             {isLogin ? "Masuk ke akun Anda" : "Buat akun baru untuk memulai"}
           </p>
         </div>
 
-        <div className="auth-card auth-card-container auth-card-responsive bg-white rounded-3xl shadow-xl border border-gray-100 p-8 relative">
+        <div className="auth-card bg-white rounded-3xl shadow-xl border border-gray-100 p-8 relative">
           {/* Close button alternative */}
           <button
             onClick={handleBack}
-            className="auth-close-btn auth-close-btn-responsive absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            type="button"
+            className="auth-close-btn absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
           >
             <FaTimes className="text-sm" />
           </button>
 
-          <div className="auth-card-header auth-card-header-container auth-card-header-responsive mb-6">
-            <h2 className="auth-card-title auth-card-title-responsive text-xl font-bold text-gray-900 mb-2">
-              {isLogin ? "Masuk" : "Daftar"}
-            </h2>
-            <p className="auth-card-subtitle auth-card-subtitle-responsive text-gray-600 text-sm">
+          <div className="auth-card-header mb-6">
+            <h2 className="auth-card-title text-xl font-bold text-gray-900 mb-2">{isLogin ? "Masuk" : "Daftar"}</h2>
+            <p className="auth-card-subtitle text-gray-600 text-sm">
               {isLogin ? "Masukkan email dan password Anda" : "Lengkapi data untuk membuat akun baru"}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="auth-form auth-form-container auth-form-responsive space-y-5">
+          <form onSubmit={handleSubmit} className="auth-form space-y-5">
             {!isLogin && (
-              <div className="auth-form-group auth-form-group-name auth-form-group-responsive">
-                <label className="auth-form-label auth-form-label-responsive block text-sm font-medium text-gray-700 mb-2">
-                  <FaUser className="auth-form-label-icon auth-form-label-icon-responsive inline mr-2 text-gray-400" />
+              <div className="auth-form-group">
+                <label className="auth-form-label block text-sm font-medium text-gray-700 mb-2">
+                  <FaUser className="inline mr-2 text-gray-400" />
                   Nama Lengkap
                 </label>
                 <input
@@ -245,15 +254,15 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required={!isLogin}
-                  className="auth-form-input auth-form-input-name auth-form-input-responsive w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="auth-form-input w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="Masukkan nama lengkap"
                 />
               </div>
             )}
 
-            <div className="auth-form-group auth-form-group-email auth-form-group-responsive">
-              <label className="auth-form-label auth-form-label-responsive block text-sm font-medium text-gray-700 mb-2">
-                <FaEnvelope className="auth-form-label-icon auth-form-label-icon-responsive inline mr-2 text-gray-400" />
+            <div className="auth-form-group">
+              <label className="auth-form-label block text-sm font-medium text-gray-700 mb-2">
+                <FaEnvelope className="inline mr-2 text-gray-400" />
                 Email
               </label>
               <input
@@ -262,44 +271,40 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                className="auth-form-input auth-form-input-email auth-form-input-responsive w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="auth-form-input w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 placeholder="nama@email.com"
               />
             </div>
 
-            <div className="auth-form-group auth-form-group-password auth-form-group-responsive">
-              <label className="auth-form-label auth-form-label-responsive block text-sm font-medium text-gray-700 mb-2">
-                <FaLock className="auth-form-label-icon auth-form-label-icon-responsive inline mr-2 text-gray-400" />
+            <div className="auth-form-group">
+              <label className="auth-form-label block text-sm font-medium text-gray-700 mb-2">
+                <FaLock className="inline mr-2 text-gray-400" />
                 Password
               </label>
-              <div className="auth-form-password auth-form-password-container auth-form-password-responsive relative">
+              <div className="auth-form-password relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="auth-form-input auth-form-input-password auth-form-input-responsive w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="auth-form-input w-full px-4 py-3 pr-12 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="Masukkan password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="auth-form-password-toggle auth-form-password-toggle-responsive auth-touch-target absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="auth-form-password-toggle absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <FaEyeSlash className="auth-form-password-icon auth-form-password-icon-responsive" />
-                  ) : (
-                    <FaEye className="auth-form-password-icon auth-form-password-icon-responsive" />
-                  )}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
             </div>
 
             {!isLogin && (
-              <div className="auth-form-group auth-form-group-confirm auth-form-group-responsive">
-                <label className="auth-form-label auth-form-label-responsive block text-sm font-medium text-gray-700 mb-2">
-                  <FaLock className="auth-form-label-icon auth-form-label-icon-responsive inline mr-2 text-gray-400" />
+              <div className="auth-form-group">
+                <label className="auth-form-label block text-sm font-medium text-gray-700 mb-2">
+                  <FaLock className="inline mr-2 text-gray-400" />
                   Konfirmasi Password
                 </label>
                 <input
@@ -308,7 +313,7 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required={!isLogin}
-                  className="auth-form-input auth-form-input-confirm auth-form-input-responsive w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className="auth-form-input w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   placeholder="Ulangi password"
                 />
               </div>
@@ -317,49 +322,44 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
             <button
               type="submit"
               disabled={loading || googleLoading}
-              className="auth-form-submit auth-form-submit-responsive auth-touch-target w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center space-x-2 shadow-lg"
+              className="auth-form-submit w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center space-x-2 shadow-lg"
             >
               {loading ? (
                 <>
-                  <FaSpinner className="auth-form-submit-spinner auth-form-submit-spinner-responsive animate-spin" />
-                  <span className="auth-form-submit-text auth-form-submit-text-responsive">
-                    {isLogin ? "Masuk..." : "Mendaftar..."}
-                  </span>
+                  <FaSpinner className="animate-spin" />
+                  <span>{isLogin ? "Masuk..." : "Mendaftar..."}</span>
                 </>
               ) : (
-                <span className="auth-form-submit-text auth-form-submit-text-responsive">
-                  {isLogin ? "Masuk" : "Daftar"}
-                </span>
+                <span>{isLogin ? "Masuk" : "Daftar"}</span>
               )}
             </button>
           </form>
 
-          <div className="auth-divider auth-divider-container auth-divider-responsive relative my-6">
-            <div className="auth-divider-line auth-divider-line-responsive absolute inset-0 flex items-center">
-              <div className="auth-divider-border auth-divider-border-responsive w-full border-t border-gray-200" />
+          <div className="auth-divider relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
             </div>
-            <div className="auth-divider-text auth-divider-text-container auth-divider-text-responsive relative flex justify-center text-sm">
-              <span className="auth-divider-label auth-divider-label-responsive px-4 bg-white text-gray-500">atau</span>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">atau</span>
             </div>
           </div>
 
           <button
             onClick={handleGoogleLogin}
+            type="button"
             disabled={googleLoading || loading}
-            className="auth-google-btn auth-google-btn-container auth-google-btn-responsive auth-touch-target w-full bg-white border-2 border-gray-200 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center space-x-3 mb-6"
+            className="auth-google-btn w-full bg-white border-2 border-gray-200 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold flex items-center justify-center space-x-3 mb-6"
           >
             {googleLoading ? (
-              <FaSpinner className="auth-google-spinner auth-google-spinner-responsive animate-spin text-blue-500" />
+              <FaSpinner className="animate-spin text-blue-500" />
             ) : (
-              <FaGoogle className="auth-google-icon auth-google-icon-responsive text-red-500" />
+              <FaGoogle className="text-red-500" />
             )}
-            <span className="auth-google-text auth-google-text-responsive">
-              {googleLoading ? "Memproses..." : `${isLogin ? "Masuk" : "Daftar"} dengan Google`}
-            </span>
+            <span>{googleLoading ? "Memproses..." : `${isLogin ? "Masuk" : "Daftar"} dengan Google`}</span>
           </button>
 
-          <div className="auth-switch auth-switch-container auth-switch-responsive text-center">
-            <p className="auth-switch-text auth-switch-text-responsive text-gray-600 text-sm">
+          <div className="auth-switch text-center">
+            <p className="text-gray-600 text-sm">
               {isLogin ? "Belum punya akun?" : "Sudah punya akun?"}{" "}
               <button
                 onClick={() => {
@@ -371,7 +371,8 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
                     confirmPassword: "",
                   })
                 }}
-                className="auth-switch-btn auth-switch-btn-responsive text-blue-600 hover:text-blue-700 font-medium"
+                type="button"
+                className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 {isLogin ? "Daftar di sini" : "Masuk di sini"}
               </button>
@@ -379,10 +380,8 @@ const Auth = ({ onSuccess = null, onBack = null }) => {
           </div>
         </div>
 
-        <div className="auth-footer auth-footer-container auth-footer-responsive text-center mt-6">
-          <p className="auth-footer-text auth-footer-text-responsive text-gray-500 text-sm">
-            © 2024 Grand Hotel. All rights reserved.
-          </p>
+        <div className="auth-footer text-center mt-6">
+          <p className="text-gray-500 text-sm">© 2024 Grand Hotel. All rights reserved.</p>
         </div>
       </div>
     </div>

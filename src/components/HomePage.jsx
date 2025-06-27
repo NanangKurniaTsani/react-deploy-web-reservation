@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 import { collection, onSnapshot } from "firebase/firestore"
 import { db } from "../config/firebase"
 
-const HomePage = ({ setCurrentView }) => {
+const HomePage = ({ onNavigate, setCurrentView }) => {
   const { currentUser, userRole } = useAuth()
   const [venues, setVenues] = useState([])
   const [filteredVenues, setFilteredVenues] = useState([])

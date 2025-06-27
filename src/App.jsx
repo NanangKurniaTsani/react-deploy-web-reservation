@@ -47,6 +47,8 @@ function AppContent() {
   }
 
   const handleNavigate = (view, data = null) => {
+    console.log("Navigating to:", view) // Debug log
+
     if (view !== currentView) {
       setNavigationHistory((prev) => [...prev, view])
     }
@@ -58,10 +60,14 @@ function AppContent() {
   }
 
   const handleBack = () => {
+    console.log("handleBack called, current history:", navigationHistory) // Debug log
+
     if (navigationHistory.length > 1) {
       const newHistory = [...navigationHistory]
       newHistory.pop()
       const previousView = newHistory[newHistory.length - 1]
+
+      console.log("Going back to:", previousView) // Debug log
 
       setNavigationHistory(newHistory)
       setCurrentView(previousView)
@@ -70,36 +76,70 @@ function AppContent() {
         setSelectedRoom(null)
       }
     } else {
+      console.log("No history, going to home") // Debug log
       handleNavigate("home")
     }
   }
 
- 
   const handleBookingSuccess = () => {
     handleNavigate("bookings")
     setSelectedRoom(null)
   }
 
-  const handleAuthSuccess = () => {}
+  // Perbaiki handleAuthSuccess
+  const handleAuthSuccess = () => {
+    console.log("Auth success, user role:", userRole) // Debug log
+
+    if (userRole === "admin") {
+      handleNavigate("admin")
+    } else {
+      handleNavigate("home")
+    }
+  }
+
+  // Tambahkan handleAuthBack
+  const handleAuthBack = () => {
+    console.log("Auth back clicked") // Debug log
+    handleNavigate("home")
+  }
 
   const renderCurrentView = () => {
     switch (currentView) {
       case "auth":
-        return <Auth onSuccess={handleAuthSuccess} />
+        return (
+          <Auth
+            onSuccess={handleAuthSuccess}
+            onBack={handleAuthBack} // Tambahkan onBack prop
+          />
+        )
       case "home":
-        return <HomePage onNavigate={handleNavigate} />
+        return <HomePage onNavigate={handleNavigate} setCurrentView={handleNavigate} />
       case "customer":
         return <CustomerDashboard />
       case "admin":
-        return userRole === "admin" ? <AdminDashboard /> : <HomePage onNavigate={handleNavigate} />
+        return userRole === "admin" ? (
+          <AdminDashboard />
+        ) : (
+          <HomePage onNavigate={handleNavigate} setCurrentView={handleNavigate} />
+        )
       case "bookings":
-        return !currentUser ? <Auth onSuccess={handleAuthSuccess} /> : <MyBookings />
+        return !currentUser ? <Auth onSuccess={handleAuthSuccess} onBack={handleAuthBack} /> : <MyBookings />
       case "booking":
-        return !currentUser ? <Auth onSuccess={handleAuthSuccess} /> : <BookingForm selectedRoom={selectedRoom} onSuccess={handleBookingSuccess} onCancel={handleBack} />
+        return !currentUser ? (
+          <Auth onSuccess={handleAuthSuccess} onBack={handleAuthBack} />
+        ) : (
+          <BookingForm selectedRoom={selectedRoom} onSuccess={handleBookingSuccess} onCancel={handleBack} />
+        )
       case "calendar":
-        return !currentUser ? <Auth onSuccess={handleAuthSuccess} /> : <CalendarDashboard userRole={userRole} />
+        return !currentUser ? (
+          <Auth onSuccess={handleAuthSuccess} onBack={handleAuthBack} />
+        ) : (
+          <CalendarDashboard userRole={userRole} />
+        )
       case "profile":
-        return !currentUser ? <Auth onSuccess={handleAuthSuccess} /> : (
+        return !currentUser ? (
+          <Auth onSuccess={handleAuthSuccess} onBack={handleAuthBack} />
+        ) : (
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 max-w-md w-full mx-4">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Profil Pengguna</h2>
@@ -127,13 +167,15 @@ function AppContent() {
           </div>
         )
       default:
-        return <HomePage onNavigate={handleNavigate} />
+        return <HomePage onNavigate={handleNavigate} setCurrentView={handleNavigate} />
     }
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {currentView !== "auth" && <Header currentView={currentView} setCurrentView={handleNavigate} userRole={userRole} />}
+      {currentView !== "auth" && (
+        <Header currentView={currentView} setCurrentView={handleNavigate} userRole={userRole} />
+      )}
       <main className={currentView !== "auth" ? "pt-0" : ""}>{renderCurrentView()}</main>
       <Toaster
         position="top-right"
