@@ -33,15 +33,12 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
   }, [userRole])
 
   useEffect(() => {
-    // Load venues untuk semua user (termasuk yang belum login)
-    console.log("Loading venues for all users...") // Debug log
     setLoading(true)
     setError(null)
 
     const unsubscribe = onSnapshot(
       collection(db, "venues"),
       (snapshot) => {
-        console.log("Venues snapshot received:", snapshot.docs.length) // Debug log
         const venuesData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -49,7 +46,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
           category: doc.data().category || "meeting",
           available: doc.data().available !== undefined ? doc.data().available : true,
         }))
-        console.log("Processed venues data:", venuesData) // Debug log
         setVenues(venuesData)
         setLoading(false)
       },
@@ -61,7 +57,7 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
       },
     )
     return () => unsubscribe()
-  }, []) // Tidak depend pada currentUser
+  }, [])
 
   useEffect(() => {
     let results = venues
@@ -79,18 +75,17 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
   }, [venues, selectedCategory, searchTerm])
 
   const handleViewDetails = (venue) => {
-    // Semua orang bisa lihat detail venue
     setSelectedVenue(venue)
     setShowDetailModal(true)
   }
 
   const handleBookVenue = (venue) => {
     if (userRole === "admin") {
-      toast.error("Admins cannot make bookings")
+      toast.error("Admin tidak dapat melakukan booking", { duration: 1500 })
       return
     }
     if (!currentUser) {
-      toast.error("Please login to make bookings")
+      toast.error("Silakan login untuk melakukan booking", { duration: 1500 })
       if (setCurrentView) {
         setCurrentView("auth")
       }
@@ -101,13 +96,12 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
 
   const handleTabChange = (tab) => {
     if (tab === "reservasi" && !currentUser) {
-      toast.error("Please login to view your bookings")
+      toast.error("Silakan login untuk melihat reservasi Anda", { duration: 1500 })
       if (setCurrentView) {
         setCurrentView("auth")
       }
       return
     }
-    // Kalender bisa diakses semua orang
     setActiveTab(tab)
   }
 
@@ -127,7 +121,7 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
               onSuccess={() => {
                 setVenueToBook(null)
                 setActiveTab("reservasi")
-                toast.success("Booking successful!")
+                toast.success("Booking berhasil!", { duration: 1500 })
               }}
               onCancel={() => setVenueToBook(null)}
             />
@@ -135,7 +129,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
         </div>
       )}
 
-      {/* Tab Navigation - Show untuk customer yang login + kalender untuk semua */}
       {(userRole === "customer" && currentUser) || !currentUser ? (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
@@ -150,7 +143,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
                   Beranda
                 </button>
 
-                {/* Tab Reservasi hanya untuk user yang login */}
                 {currentUser && (
                   <button
                     onClick={() => handleTabChange("reservasi")}
@@ -162,7 +154,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
                   </button>
                 )}
 
-                {/* Tab Kalender untuk semua orang */}
                 <button
                   onClick={() => handleTabChange("kalender")}
                   className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
@@ -179,7 +170,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
 
       {activeTab === "beranda" && (
         <div className="container mx-auto px-4 py-8">
-          {/* Search dan Filter untuk semua user */}
           <div className="text-center mb-6">
             <div className="max-w-md mx-auto mb-6">
               <div className="relative">
@@ -238,7 +228,6 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
             </div>
           </div>
 
-          {/* Venue List untuk semua user */}
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -258,28 +247,27 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
           ) : error ? (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">⚠️</div>
-              <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Venues</h3>
+              <h3 className="text-xl font-semibold text-red-600 mb-2">Gagal Memuat Venue</h3>
               <p className="text-gray-600 mb-4">{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
               >
-                Refresh Page
+                Muat Ulang
               </button>
             </div>
           ) : filteredVenues.length > 0 ? (
             <>
-              {/* Info untuk user yang belum login */}
               {!currentUser && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <div className="text-center">
                     <p className="text-blue-800 font-medium">
-                      🔍 Browse our venues freely!
+                      🔍 Jelajahi venue kami dengan bebas!
                       <button
                         onClick={() => setCurrentView && setCurrentView("auth")}
                         className="text-blue-600 hover:text-blue-800 underline ml-1"
                       >
-                        Login to make bookings
+                        Login untuk melakukan booking
                       </button>
                     </p>
                   </div>
@@ -294,7 +282,7 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
                     onViewDetails={handleViewDetails}
                     onBook={handleBookVenue}
                     userRole={userRole}
-                    isGuest={!currentUser} // Pass info apakah user guest
+                    isGuest={!currentUser}
                   />
                 ))}
               </div>
@@ -328,15 +316,13 @@ const HomePage = ({ onNavigate, setCurrentView }) => {
             onClose={() => setShowDetailModal(false)}
             onBook={handleBookVenue}
             userRole={userRole}
-            isGuest={!currentUser} // Pass info apakah user guest
+            isGuest={!currentUser}
           />
         </div>
       )}
 
-      {/* Reservasi hanya untuk user yang login */}
       {activeTab === "reservasi" && currentUser && <MyBookings />}
 
-      {/* Kalender untuk semua orang */}
       {activeTab === "kalender" && <CalendarDashboard isGuest={!currentUser} />}
     </div>
   )

@@ -29,7 +29,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
       setCurrentView("home")
     } catch (error) {
       console.error("Logout error:", error)
-      toast.error("Gagal logout", { duration: 2000 })
+      toast.error("Gagal logout", { duration: 1000 })
     }
   }
 
@@ -55,10 +55,10 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
             <div className="flex items-center space-x-2">
               {userRole === "admin" && (
                 <>
-                  <div className="hidden sm:flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                  <div className="hidden sm:flex bg-gray-100 p-1 rounded-lg">
                     <button
                       onClick={() => setCurrentView("home")}
-                      className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 ${
+                      className={`relative px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors ${
                         currentView === "home" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                       }`}
                     >
@@ -67,7 +67,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                     </button>
                     <button
                       onClick={() => setCurrentView("admin")}
-                      className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 ${
+                      className={`relative px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors ${
                         currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                       }`}
                     >
@@ -76,7 +76,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                     </button>
                     <button
                       onClick={() => setCurrentView("calendar")}
-                      className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 ${
+                      className={`relative px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-2 transition-colors ${
                         currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-500 hover:text-gray-700"
                       }`}
                     >
@@ -85,27 +85,27 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                     </button>
                   </div>
 
-                  <div className="sm:hidden flex items-center space-x-0 bg-gray-100 rounded-lg h-7">
+                  <div className="sm:hidden flex items-center bg-gray-100 rounded-lg overflow-hidden">
                     <button
                       onClick={() => setCurrentView("home")}
-                      className={`w-7 h-7 flex items-center justify-center ${
-                        currentView === "home" ? "bg-blue-500 text-white rounded-l-lg" : "text-gray-600"
+                      className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                        currentView === "home" ? "bg-blue-500 text-white" : "text-gray-600 hover:bg-gray-200"
                       }`}
                     >
                       <FaHome className="text-xs" />
                     </button>
                     <button
                       onClick={() => setCurrentView("admin")}
-                      className={`w-7 h-7 flex items-center justify-center ${
-                        currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-600"
+                      className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                        currentView === "admin" ? "bg-blue-500 text-white" : "text-gray-600 hover:bg-gray-200"
                       }`}
                     >
                       <FaChartBar className="text-xs" />
                     </button>
                     <button
                       onClick={() => setCurrentView("calendar")}
-                      className={`w-7 h-7 flex items-center justify-center rounded-r-lg ${
-                        currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-600"
+                      className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                        currentView === "calendar" ? "bg-blue-500 text-white" : "text-gray-600 hover:bg-gray-200"
                       }`}
                     >
                       <FaCalendarAlt className="text-xs" />
@@ -117,7 +117,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 p-1 rounded-xl hover:bg-gray-100"
+                  className="flex items-center space-x-2 p-1 rounded-xl hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                     <FaUser className="text-white text-xs" />
@@ -137,7 +137,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                         setCurrentView("profile")
                         setShowUserMenu(false)
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 transition-colors"
                     >
                       <FaUser className="text-gray-400" />
                       <span>Profil</span>
@@ -148,7 +148,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                         handleLogout()
                         setShowUserMenu(false)
                       }}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors"
                     >
                       <FaSignOutAlt className="text-red-400" />
                       <span>Logout</span>

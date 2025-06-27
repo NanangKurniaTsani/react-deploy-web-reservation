@@ -47,8 +47,6 @@ function AppContent() {
   }
 
   const handleNavigate = (view, data = null) => {
-    console.log("Navigating to:", view) // Debug log
-
     if (view !== currentView) {
       setNavigationHistory((prev) => [...prev, view])
     }
@@ -60,14 +58,10 @@ function AppContent() {
   }
 
   const handleBack = () => {
-    console.log("handleBack called, current history:", navigationHistory) // Debug log
-
     if (navigationHistory.length > 1) {
       const newHistory = [...navigationHistory]
       newHistory.pop()
       const previousView = newHistory[newHistory.length - 1]
-
-      console.log("Going back to:", previousView) // Debug log
 
       setNavigationHistory(newHistory)
       setCurrentView(previousView)
@@ -76,7 +70,6 @@ function AppContent() {
         setSelectedRoom(null)
       }
     } else {
-      console.log("No history, going to home") // Debug log
       handleNavigate("home")
     }
   }
@@ -86,10 +79,7 @@ function AppContent() {
     setSelectedRoom(null)
   }
 
-  // Perbaiki handleAuthSuccess
   const handleAuthSuccess = () => {
-    console.log("Auth success, user role:", userRole) // Debug log
-
     if (userRole === "admin") {
       handleNavigate("admin")
     } else {
@@ -97,21 +87,14 @@ function AppContent() {
     }
   }
 
-  // Tambahkan handleAuthBack
   const handleAuthBack = () => {
-    console.log("Auth back clicked") // Debug log
     handleNavigate("home")
   }
 
   const renderCurrentView = () => {
     switch (currentView) {
       case "auth":
-        return (
-          <Auth
-            onSuccess={handleAuthSuccess}
-            onBack={handleAuthBack} // Tambahkan onBack prop
-          />
-        )
+        return <Auth onSuccess={handleAuthSuccess} onBack={handleAuthBack} />
       case "home":
         return <HomePage onNavigate={handleNavigate} setCurrentView={handleNavigate} />
       case "customer":
@@ -180,7 +163,7 @@ function AppContent() {
       <Toaster
         position="top-right"
         toastOptions={{
-          duration: 4000,
+          duration: 1500,
           style: {
             background: "#fff",
             color: "#374151",
