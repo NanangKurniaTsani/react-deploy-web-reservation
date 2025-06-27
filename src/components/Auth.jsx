@@ -11,12 +11,22 @@ import {
 } from "firebase/auth"
 import { doc, setDoc, getDoc } from "firebase/firestore"
 import { auth, db } from "../config/firebase"
-import { FaEye, FaEyeSlash, FaSpinner, FaEnvelope, FaLock, FaUser, FaGoogle } from "react-icons/fa"
+import {
+  FaEye,
+  FaEyeSlash,
+  FaSpinner,
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaGoogle,
+  FaArrowLeft,
+  FaTimes,
+} from "react-icons/fa"
 import toast from "react-hot-toast"
 import icon_hotel from "../assets/icon_hotel.png"
 import { useBackButton } from "../hooks/UseBackButton"
 
-const Auth = ({ onSuccess = null }) => {
+const Auth = ({ onSuccess = null, onBack = null }) => {
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -28,8 +38,16 @@ const Auth = ({ onSuccess = null }) => {
     confirmPassword: "",
   })
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack()
+    } else if (onSuccess) {
+      onSuccess()
+    }
+  }
+
   useBackButton(() => {
-    if (onSuccess) onSuccess()
+    handleBack()
     return true
   })
 
@@ -168,6 +186,19 @@ const Auth = ({ onSuccess = null }) => {
   return (
     <div className="auth-container auth-container-responsive min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
       <div className="auth-wrapper auth-wrapper-container auth-wrapper-responsive w-full max-w-md">
+        {/* Back Navigation */}
+        <div className="auth-back-nav auth-back-nav-container auth-back-nav-responsive mb-4">
+          <button
+            onClick={handleBack}
+            className="auth-back-btn auth-back-btn-responsive flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors group"
+          >
+            <div className="auth-back-icon auth-back-icon-responsive w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm group-hover:shadow-md transition-shadow">
+              <FaArrowLeft className="text-sm" />
+            </div>
+            <span className="auth-back-text auth-back-text-responsive font-medium">Kembali ke Beranda</span>
+          </button>
+        </div>
+
         <div className="auth-header auth-header-container auth-header-responsive text-center mb-8">
           <div className="auth-logo auth-logo-container auth-logo-responsive flex items-center justify-center cursor-pointer mx-auto w-max">
             <div className="auth-logo-icon auth-logo-icon-responsive w-12 h-12 flex items-center justify-center">
@@ -183,7 +214,15 @@ const Auth = ({ onSuccess = null }) => {
           </p>
         </div>
 
-        <div className="auth-card auth-card-container auth-card-responsive bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+        <div className="auth-card auth-card-container auth-card-responsive bg-white rounded-3xl shadow-xl border border-gray-100 p-8 relative">
+          {/* Close button alternative */}
+          <button
+            onClick={handleBack}
+            className="auth-close-btn auth-close-btn-responsive absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <FaTimes className="text-sm" />
+          </button>
+
           <div className="auth-card-header auth-card-header-container auth-card-header-responsive mb-6">
             <h2 className="auth-card-title auth-card-title-responsive text-xl font-bold text-gray-900 mb-2">
               {isLogin ? "Masuk" : "Daftar"}
@@ -352,6 +391,7 @@ const Auth = ({ onSuccess = null }) => {
 
 Auth.propTypes = {
   onSuccess: PropTypes.func,
+  onBack: PropTypes.func,
 }
 
 export default Auth
