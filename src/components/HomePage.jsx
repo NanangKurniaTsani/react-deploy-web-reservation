@@ -25,7 +25,6 @@ const HomePage = () => {
   const [venueToBook, setVenueToBook] = useState(null)
   const [activeTab, setActiveTab] = useState("beranda")
 
-  // Implementasi useBackButton
   useBackButton(() => {
     if (showDetailModal) {
       setShowDetailModal(false)
@@ -36,23 +35,18 @@ const HomePage = () => {
     }
   })
 
-  // Setup real-time listener for venues
   const setupVenuesListener = () => {
     try {
       const venuesRef = collection(db, "venues")
       const unsubscribe = onSnapshot(
         venuesRef,
         (snapshot) => {
-          console.log("Venues snapshot received, docs count:", snapshot.docs.length)
-
           const venuesFromDB = snapshot.docs.map((doc) => {
             const data = doc.data()
-            console.log("Venue data from Firestore:", data)
             return {
               id: doc.id,
               docId: doc.id,
               ...data,
-              // Pastikan semua field ada dengan default values
               name: data.name || "Unnamed Venue",
               category: data.category || "meeting",
               capacity: data.capacity || 50,
@@ -66,8 +60,6 @@ const HomePage = () => {
               imageUrl: data.imageUrl || "",
             }
           })
-
-          console.log("Processed venues from Firestore:", venuesFromDB)
           setVenues(venuesFromDB)
           setLoading(false)
         },
@@ -78,7 +70,6 @@ const HomePage = () => {
           setLoading(false)
         },
       )
-
       return unsubscribe
     } catch (error) {
       console.error("Error setting up venues listener:", error)
@@ -90,30 +81,21 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    console.log("Setting up venues listener...")
     const unsubscribe = setupVenuesListener()
-
-    // Cleanup listener on unmount
     return () => {
-      if (unsubscribe) {
-        console.log("Cleaning up venues listener")
-        unsubscribe()
-      }
+      if (unsubscribe) unsubscribe()
     }
   }, [])
 
   useEffect(() => {
-    console.log("Filtering venues, total venues:", venues.length)
     filterVenues()
   }, [venues, selectedCategory, searchTerm])
 
   const filterVenues = () => {
     let filtered = venues
-
     if (selectedCategory !== "all") {
       filtered = filtered.filter((venue) => venue.category === selectedCategory)
     }
-
     if (searchTerm) {
       filtered = filtered.filter(
         (venue) =>
@@ -121,8 +103,6 @@ const HomePage = () => {
           venue.description?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
-
-    console.log("Filtered venues:", filtered.length)
     setFilteredVenues(filtered)
   }
 
@@ -169,15 +149,15 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Navigation Tabs - hanya untuk customer */}
+      {/* Navigation Tabs */}
       {userRole !== "admin" && (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
-              <div className="flex space-x-1 bg-gray-100 p-0.5 rounded-lg">
+              <div className="flex flex-wrap justify-center gap-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => handleTabChange("beranda")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     activeTab === "beranda" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -187,7 +167,7 @@ const HomePage = () => {
                   <>
                     <button
                       onClick={() => handleTabChange("reservasi")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                         activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
@@ -195,7 +175,7 @@ const HomePage = () => {
                     </button>
                     <button
                       onClick={() => handleTabChange("kalender")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                      className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                         activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
@@ -230,10 +210,10 @@ const HomePage = () => {
             </div>
 
             <div className="flex justify-center mb-8">
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex flex-wrap justify-center gap-2 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => setSelectedCategory("all")}
-                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "all" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -241,7 +221,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("ballroom")}
-                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "ballroom" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -249,7 +229,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("meeting")}
-                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "meeting" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
@@ -257,7 +237,7 @@ const HomePage = () => {
                 </button>
                 <button
                   onClick={() => setSelectedCategory("outdoor")}
-                  className={`px-3 sm:px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
                     selectedCategory === "outdoor" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
