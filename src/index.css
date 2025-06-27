@@ -1238,3 +1238,55 @@
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+/* Button Container Styles */
+.button-container {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.button-container::-webkit-scrollbar {
+  display: none;
+}
+
+.button-scroll-wrapper {
+  display: inline-flex;
+  min-width: max-content;
+  width: 100%;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.nav-button.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.nav-button.inactive {
+  color: #4b5563;
+}
+
+.nav-button.inactive:hover {
+  color: #111827;
+}
+
+@media (max-width: 640px) {
+  .button-container {
+    width: 100vw;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

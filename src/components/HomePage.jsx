@@ -26,51 +26,38 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState("beranda")
 
   useBackButton(() => {
-    if (showDetailModal) {
-      setShowDetailModal(false)
-    } else if (venueToBook) {
-      setVenueToBook(null)
-    } else if (activeTab !== "beranda") {
-      setActiveTab("beranda")
-    }
+    if (showDetailModal) setShowDetailModal(false)
+    else if (venueToBook) setVenueToBook(null)
+    else if (activeTab !== "beranda") setActiveTab("beranda")
   })
 
   const setupVenuesListener = () => {
     try {
       const venuesRef = collection(db, "venues")
-      const unsubscribe = onSnapshot(
-        venuesRef,
-        (snapshot) => {
-          const venuesFromDB = snapshot.docs.map((doc) => {
-            const data = doc.data()
-            return {
-              id: doc.id,
-              docId: doc.id,
-              ...data,
-              name: data.name || "Unnamed Venue",
-              category: data.category || "meeting",
-              capacity: data.capacity || 50,
-              price: data.price || 1000000,
-              description: data.description || "Venue description not available",
-              available: data.available !== undefined ? data.available : true,
-              rating: data.rating || 4.5,
-              reviews: data.reviews || 0,
-              amenities: data.amenities || [],
-              images: data.images || [],
-              imageUrl: data.imageUrl || "",
-            }
-          })
-          setVenues(venuesFromDB)
-          setLoading(false)
-        },
-        (error) => {
-          console.error("Error in venues listener:", error)
-          toast.error("Gagal memuat data venue")
-          setVenues([])
-          setLoading(false)
-        },
-      )
-      return unsubscribe
+      return onSnapshot(venuesRef, (snapshot) => {
+        const venuesFromDB = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          docId: doc.id,
+          name: doc.data().name || "Unnamed Venue",
+          category: doc.data().category || "meeting",
+          capacity: doc.data().capacity || 50,
+          price: doc.data().price || 1000000,
+          description: doc.data().description || "Venue description not available",
+          available: doc.data().available !== undefined ? doc.data().available : true,
+          rating: doc.data().rating || 4.5,
+          reviews: doc.data().reviews || 0,
+          amenities: doc.data().amenities || [],
+          images: doc.data().images || [],
+          imageUrl: doc.data().imageUrl || "",
+        }))
+        setVenues(venuesFromDB)
+        setLoading(false)
+      }, (error) => {
+        console.error("Error in venues listener:", error)
+        toast.error("Gagal memuat data venue")
+        setVenues([])
+        setLoading(false)
+      })
     } catch (error) {
       console.error("Error setting up venues listener:", error)
       toast.error("Gagal menghubungkan ke database")
@@ -82,29 +69,18 @@ const HomePage = () => {
 
   useEffect(() => {
     const unsubscribe = setupVenuesListener()
-    return () => {
-      if (unsubscribe) unsubscribe()
-    }
+    return () => unsubscribe && unsubscribe()
   }, [])
 
   useEffect(() => {
-    filterVenues()
-  }, [venues, selectedCategory, searchTerm])
-
-  const filterVenues = () => {
     let filtered = venues
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((venue) => venue.category === selectedCategory)
-    }
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (venue) =>
-          venue.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          venue.description?.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
+    if (selectedCategory !== "all") filtered = filtered.filter(v => v.category === selectedCategory)
+    if (searchTerm) filtered = filtered.filter(v => 
+      v.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      v.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     setFilteredVenues(filtered)
-  }
+  }, [venues, selectedCategory, searchTerm])
 
   const handleViewDetails = (venue) => {
     setSelectedVenue(venue)
@@ -112,18 +88,12 @@ const HomePage = () => {
   }
 
   const handleBookVenue = (venue) => {
-    if (userRole === "admin") {
-      toast.error("Admin tidak dapat melakukan pemesanan")
-      return
-    }
+    if (userRole === "admin") return toast.error("Admin tidak dapat melakukan pemesanan")
     setVenueToBook(venue)
   }
 
   const handleTabChange = (tab) => {
-    if (tab === "reservasi" && !currentUser) {
-      toast.error("Anda perlu login untuk melihat reservasi")
-      return
-    }
+    if (tab === "reservasi" && !currentUser) return toast.error("Anda perlu login untuk melihat reservasi")
     setActiveTab(tab)
   }
 
@@ -149,53 +119,44 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Navigation Tabs */}
       {userRole !== "admin" && (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
-              <div className="flex flex-wrap justify-center gap-1 bg-gray-100 p-1 rounded-lg">
-                <button
-                  onClick={() => handleTabChange("beranda")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                    activeTab === "beranda" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Beranda
-                </button>
-                {currentUser && userRole === "customer" && (
-                  <>
-                    <button
-                      onClick={() => handleTabChange("reservasi")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                        activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      Reservasi Saya
-                    </button>
-                    <button
-                      onClick={() => handleTabChange("kalender")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                        activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      Kalender
-                    </button>
-                  </>
-                )}
+              <div className="button-container">
+                <div className="button-scroll-wrapper">
+                  <button
+                    onClick={() => handleTabChange("beranda")}
+                    className={`nav-button ${activeTab === "beranda" ? "active" : "inactive"}`}
+                  >
+                    Beranda
+                  </button>
+                  {currentUser && userRole === "customer" && (
+                    <>
+                      <button
+                        onClick={() => handleTabChange("reservasi")}
+                        className={`nav-button ${activeTab === "reservasi" ? "active" : "inactive"}`}
+                      >
+                        Reservasi Saya
+                      </button>
+                      <button
+                        onClick={() => handleTabChange("kalender")}
+                        className={`nav-button ${activeTab === "kalender" ? "active" : "inactive"}`}
+                      >
+                        Kalender
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Content */}
       {(activeTab === "beranda" || userRole === "admin") && (
         <div className="container mx-auto px-4 py-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">King Royal Hotel</h1>
-            <p className="text-gray-600 mb-6 text-base">Luxury accommodation experience</p>
-
             <div className="max-w-md mx-auto mb-6">
               <div className="relative">
                 <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -210,39 +171,33 @@ const HomePage = () => {
             </div>
 
             <div className="flex justify-center mb-8">
-              <div className="flex flex-wrap justify-center gap-2 bg-gray-100 p-1 rounded-lg">
-                <button
-                  onClick={() => setSelectedCategory("all")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                    selectedCategory === "all" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Semua Venue
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("ballroom")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                    selectedCategory === "ballroom" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Ballroom
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("meeting")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                    selectedCategory === "meeting" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Meeting Room
-                </button>
-                <button
-                  onClick={() => setSelectedCategory("outdoor")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors whitespace-nowrap ${
-                    selectedCategory === "outdoor" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Outdoor
-                </button>
+              <div className="button-container">
+                <div className="button-scroll-wrapper">
+                  <button
+                    onClick={() => setSelectedCategory("all")}
+                    className={`nav-button ${selectedCategory === "all" ? "active" : "inactive"}`}
+                  >
+                    Semua Venue
+                  </button>
+                  <button
+                    onClick={() => setSelectedCategory("ballroom")}
+                    className={`nav-button ${selectedCategory === "ballroom" ? "active" : "inactive"}`}
+                  >
+                    Ballroom
+                  </button>
+                  <button
+                    onClick={() => setSelectedCategory("meeting")}
+                    className={`nav-button ${selectedCategory === "meeting" ? "active" : "inactive"}`}
+                  >
+                    Meeting Room
+                  </button>
+                  <button
+                    onClick={() => setSelectedCategory("outdoor")}
+                    className={`nav-button ${selectedCategory === "outdoor" ? "active" : "inactive"}`}
+                  >
+                    Outdoor
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -250,10 +205,7 @@ const HomePage = () => {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse"
-                >
+                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
                   <div className="h-48 bg-gray-200"></div>
                   <div className="p-4 space-y-3">
                     <div className="h-5 bg-gray-200 rounded w-3/4"></div>
@@ -268,8 +220,8 @@ const HomePage = () => {
               <div className="text-6xl mb-4">🏨</div>
               <h3 className="text-xl font-semibold text-gray-600 mb-2">Belum Ada Venue</h3>
               <p className="text-gray-500 mb-4">
-                {userRole === "admin"
-                  ? "Silakan tambahkan venue melalui menu Admin > Venues"
+                {userRole === "admin" 
+                  ? "Silakan tambahkan venue melalui menu Admin > Venues" 
                   : "Venue sedang dalam proses setup. Silakan coba lagi nanti."}
               </p>
               {userRole === "admin" && (
@@ -324,7 +276,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Customer Tabs Content */}
       {activeTab === "reservasi" && userRole === "customer" && <MyBookings />}
       {activeTab === "kalender" && userRole === "customer" && <CalendarDashboard userRole={userRole} />}
     </div>
