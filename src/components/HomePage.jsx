@@ -107,7 +107,7 @@ const HomePage = () => {
         </div>
       )}
 
-      {userRole !== "admin" && (
+      {currentUser && userRole === "customer" && (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
@@ -120,26 +120,22 @@ const HomePage = () => {
                 >
                   Beranda
                 </button>
-                {currentUser && userRole === "customer" && (
-                  <>
-                    <button
-                      onClick={() => handleTabChange("reservasi")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                        activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      Reservasi Saya
-                    </button>
-                    <button
-                      onClick={() => handleTabChange("kalender")}
-                      className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                        activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      Kalender
-                    </button>
-                  </>
-                )}
+                <button
+                  onClick={() => handleTabChange("reservasi")}
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                    activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Reservasi Saya
+                </button>
+                <button
+                  onClick={() => handleTabChange("kalender")}
+                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                    activeTab === "kalender" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Kalender
+                </button>
               </div>
             </div>
           </div>
