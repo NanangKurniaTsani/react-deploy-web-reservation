@@ -25,7 +25,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth)
-      toast.success("Logout berhasil!", { duration: 1000})
+      toast.success("Logout berhasil!", { duration: 1000 })
       setCurrentView("home")
     } catch (error) {
       console.error("Logout error:", error)
@@ -46,12 +46,8 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
               />
             </div>
             <div className="min-w-0">
-              <h1 className="text-sm font-bold text-gray-900 truncate">
-                King Royal Hotel
-              </h1>
-              <p className="text-xs text-gray-600 hidden sm:block">
-                Venue Management System
-              </p>
+              <h1 className="text-sm font-bold text-gray-900 truncate">King Royal Hotel</h1>
+              <p className="text-xs text-gray-600 hidden sm:block">Venue Management System</p>
             </div>
           </div>
 
@@ -130,9 +126,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
                     <p className="text-sm font-medium text-gray-900 truncate max-w-24">
                       {currentUser.displayName || currentUser.email?.split("@")[0]}
                     </p>
-                    <p className="text-xs text-gray-600 capitalize">
-                      {userRole}
-                    </p>
+                    <p className="text-xs text-gray-600 capitalize">{userRole}</p>
                   </div>
                 </button>
 
@@ -174,12 +168,7 @@ const Header = ({ currentView, setCurrentView, userRole = "customer" }) => {
         </div>
       </div>
 
-      {showUserMenu && (
-        <div
-          className="fixed inset-0 z-30"
-          onClick={() => setShowUserMenu(false)}
-        />
-      )}
+      {showUserMenu && <div className="fixed inset-0 z-30" onClick={() => setShowUserMenu(false)} />}
     </header>
   )
 }

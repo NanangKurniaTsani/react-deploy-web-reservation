@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 import { collection, onSnapshot } from "firebase/firestore"
 import { db } from "../config/firebase"
 
-const HomePage = () => {
+const HomePage = ({ setCurrentView }) => {
   const { currentUser, userRole } = useAuth()
   const [venues, setVenues] = useState([])
   const [filteredVenues, setFilteredVenues] = useState([])
@@ -24,57 +24,62 @@ const HomePage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [venueToBook, setVenueToBook] = useState(null)
   const [activeTab, setActiveTab] = useState("beranda")
+  const [error, setError] = useState(null)
 
-  // Ensure tab is always "beranda" for non-customer users
   useEffect(() => {
     if (userRole !== "customer") {
       setActiveTab("beranda")
     }
   }, [userRole])
 
-  useBackButton(() => {
-    if (showDetailModal) setShowDetailModal(false)
-    else if (venueToBook) setVenueToBook(null)
-    else if (activeTab !== "beranda" && userRole === "customer") setActiveTab("beranda")
-  })
-
   useEffect(() => {
+    // Load venues untuk semua user (termasuk yang belum login)
+    console.log("Loading venues for all users...") // Debug log
+    setLoading(true)
+    setError(null)
+
     const unsubscribe = onSnapshot(
       collection(db, "venues"),
       (snapshot) => {
-        const venuesData = snapshot.docs.map(doc => ({
+        console.log("Venues snapshot received:", snapshot.docs.length) // Debug log
+        const venuesData = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           name: doc.data().name || "Unnamed Venue",
           category: doc.data().category || "meeting",
-          available: doc.data().available !== undefined ? doc.data().available : true
+          available: doc.data().available !== undefined ? doc.data().available : true,
         }))
+        console.log("Processed venues data:", venuesData) // Debug log
         setVenues(venuesData)
         setLoading(false)
       },
       (error) => {
-        console.error(error)
+        console.error("Error loading venues:", error)
+        setError(error.message)
+        setVenues([])
         setLoading(false)
-      }
+      },
     )
     return () => unsubscribe()
-  }, [])
+  }, []) // Tidak depend pada currentUser
 
   useEffect(() => {
     let results = venues
     if (selectedCategory !== "all") {
-      results = results.filter(venue => venue.category === selectedCategory)
+      results = results.filter((venue) => venue.category === selectedCategory)
     }
     if (searchTerm) {
-      results = results.filter(venue => 
-        venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        venue.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      results = results.filter(
+        (venue) =>
+          venue.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          venue.description?.toLowerCase().includes(searchTerm.toLowerCase()),
       )
     }
     setFilteredVenues(results)
   }, [venues, selectedCategory, searchTerm])
 
   const handleViewDetails = (venue) => {
+    // Semua orang bisa lihat detail venue
     setSelectedVenue(venue)
     setShowDetailModal(true)
   }
@@ -84,23 +89,40 @@ const HomePage = () => {
       toast.error("Admins cannot make bookings")
       return
     }
+    if (!currentUser) {
+      toast.error("Please login to make bookings")
+      if (setCurrentView) {
+        setCurrentView("auth")
+      }
+      return
+    }
     setVenueToBook(venue)
   }
 
   const handleTabChange = (tab) => {
-    if (tab !== "beranda" && !currentUser) {
-      toast.error("Please login to view bookings")
+    if (tab === "reservasi" && !currentUser) {
+      toast.error("Please login to view your bookings")
+      if (setCurrentView) {
+        setCurrentView("auth")
+      }
       return
     }
+    // Kalender bisa diakses semua orang
     setActiveTab(tab)
   }
 
+  useBackButton(() => {
+    if (showDetailModal) setShowDetailModal(false)
+    else if (venueToBook) setVenueToBook(null)
+    else if (activeTab !== "beranda" && userRole === "customer") setActiveTab("beranda")
+  })
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {venueToBook && (
+      {venueToBook && currentUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <BookingForm 
+            <BookingForm
               selectedRoom={venueToBook}
               onSuccess={() => {
                 setVenueToBook(null)
@@ -113,8 +135,8 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* Only show navigation for customer users */}
-      {userRole === "customer" && (
+      {/* Tab Navigation - Show untuk customer yang login + kalender untuk semua */}
+      {(userRole === "customer" && currentUser) || !currentUser ? (
         <div className="bg-white shadow-sm">
           <div className="container mx-auto px-4">
             <div className="flex justify-center py-4">
@@ -127,14 +149,20 @@ const HomePage = () => {
                 >
                   Beranda
                 </button>
-                <button
-                  onClick={() => handleTabChange("reservasi")}
-                  className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
-                    activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  Reservasi Saya
-                </button>
+
+                {/* Tab Reservasi hanya untuk user yang login */}
+                {currentUser && (
+                  <button
+                    onClick={() => handleTabChange("reservasi")}
+                    className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
+                      activeTab === "reservasi" ? "bg-blue-500 text-white" : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    Reservasi Saya
+                  </button>
+                )}
+
+                {/* Tab Kalender untuk semua orang */}
                 <button
                   onClick={() => handleTabChange("kalender")}
                   className={`px-4 py-1.5 rounded-md font-medium transition-colors ${
@@ -147,11 +175,11 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
 
-      {/* Main content area */}
       {activeTab === "beranda" && (
         <div className="container mx-auto px-4 py-8">
+          {/* Search dan Filter untuk semua user */}
           <div className="text-center mb-6">
             <div className="max-w-md mx-auto mb-6">
               <div className="relative">
@@ -170,8 +198,8 @@ const HomePage = () => {
               <button
                 onClick={() => setSelectedCategory("all")}
                 className={`px-1 py-2 rounded-lg font-medium border transition-colors text-sm ${
-                  selectedCategory === "all" 
-                    ? "bg-blue-500 text-white border-blue-500" 
+                  selectedCategory === "all"
+                    ? "bg-blue-500 text-white border-blue-500"
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -180,8 +208,8 @@ const HomePage = () => {
               <button
                 onClick={() => setSelectedCategory("ballroom")}
                 className={`px-1 py-2 rounded-lg font-medium border transition-colors text-sm ${
-                  selectedCategory === "ballroom" 
-                    ? "bg-blue-500 text-white border-blue-500" 
+                  selectedCategory === "ballroom"
+                    ? "bg-blue-500 text-white border-blue-500"
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -190,8 +218,8 @@ const HomePage = () => {
               <button
                 onClick={() => setSelectedCategory("meeting")}
                 className={`px-1 py-2 rounded-lg font-medium border transition-colors text-sm ${
-                  selectedCategory === "meeting" 
-                    ? "bg-blue-500 text-white border-blue-500" 
+                  selectedCategory === "meeting"
+                    ? "bg-blue-500 text-white border-blue-500"
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -200,8 +228,8 @@ const HomePage = () => {
               <button
                 onClick={() => setSelectedCategory("outdoor")}
                 className={`px-1 py-2 rounded-lg font-medium border transition-colors text-sm ${
-                  selectedCategory === "outdoor" 
-                    ? "bg-blue-500 text-white border-blue-500" 
+                  selectedCategory === "outdoor"
+                    ? "bg-blue-500 text-white border-blue-500"
                     : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
                 }`}
               >
@@ -210,10 +238,14 @@ const HomePage = () => {
             </div>
           </div>
 
+          {/* Venue List untuk semua user */}
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse"
+                >
                   <div className="h-48 bg-gray-200"></div>
                   <div className="p-4 space-y-3">
                     <div className="h-5 bg-gray-200 rounded w-3/4"></div>
@@ -223,24 +255,61 @@ const HomePage = () => {
                 </div>
               ))}
             </div>
-          ) : filteredVenues.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filteredVenues.map((venue) => (
-                <VenueCard
-                  key={venue.id}
-                  venue={venue}
-                  onViewDetails={handleViewDetails}
-                  onBook={handleBookVenue}
-                  userRole={userRole}
-                />
-              ))}
+          ) : error ? (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Venues</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Refresh Page
+              </button>
             </div>
+          ) : filteredVenues.length > 0 ? (
+            <>
+              {/* Info untuk user yang belum login */}
+              {!currentUser && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <div className="text-center">
+                    <p className="text-blue-800 font-medium">
+                      🔍 Browse our venues freely!
+                      <button
+                        onClick={() => setCurrentView && setCurrentView("auth")}
+                        className="text-blue-600 hover:text-blue-800 underline ml-1"
+                      >
+                        Login to make bookings
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {filteredVenues.map((venue) => (
+                  <VenueCard
+                    key={venue.id}
+                    venue={venue}
+                    onViewDetails={handleViewDetails}
+                    onBook={handleBookVenue}
+                    userRole={userRole}
+                    isGuest={!currentUser} // Pass info apakah user guest
+                  />
+                ))}
+              </div>
+            </>
           ) : (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">🔍</div>
               <h3 className="text-xl font-semibold text-gray-600 mb-2">
                 {venues.length === 0 ? "Belum Ada Venue" : "Tidak Ada Venue Ditemukan"}
               </h3>
+              <p className="text-gray-500 mb-4">
+                {venues.length === 0
+                  ? "Belum ada venue yang ditambahkan ke sistem"
+                  : "Coba ubah filter atau kata kunci pencarian"}
+              </p>
               <button
                 onClick={() => {
                   setSearchTerm("")
@@ -259,12 +328,16 @@ const HomePage = () => {
             onClose={() => setShowDetailModal(false)}
             onBook={handleBookVenue}
             userRole={userRole}
+            isGuest={!currentUser} // Pass info apakah user guest
           />
         </div>
       )}
 
-      {activeTab === "reservasi" && <MyBookings />}
-      {activeTab === "kalender" && <CalendarDashboard />}
+      {/* Reservasi hanya untuk user yang login */}
+      {activeTab === "reservasi" && currentUser && <MyBookings />}
+
+      {/* Kalender untuk semua orang */}
+      {activeTab === "kalender" && <CalendarDashboard isGuest={!currentUser} />}
     </div>
   )
 }

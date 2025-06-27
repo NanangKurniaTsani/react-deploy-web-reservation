@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types"
 import {
   onAuthStateChanged,
   signOut,
@@ -143,5 +143,5 @@ export const AuthProvider = ({ children }) => {
 }
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
