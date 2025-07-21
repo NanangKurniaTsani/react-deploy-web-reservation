@@ -22,6 +22,7 @@ import {
 } from "react-icons/fa"
 import toast from "react-hot-toast"
 import { useBackButton } from "../hooks/UseBackButton"
+import logo_mandiri from "../assets/logo_mandiri.png"
 
 const BookingForm = ({
   selectedRoom: selectedVenue = null,
@@ -62,6 +63,7 @@ const BookingForm = ({
     { value: "afternoon", label: "Siang (13:00 - 17:00)", price: 0.6 },
     { value: "evening", label: "Malam (18:00 - 22:00)", price: 0.6 },
   ]
+
   const fetchPaymentMethods = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "paymentMethods"))
@@ -225,40 +227,40 @@ const BookingForm = ({
 
   if (success) {
     return (
-      <div className="booking-form-success booking-form-success-container booking-form-success-responsive max-w-2xl mx-auto px-4 mobile-px-4">
-        <div className="booking-form-success-card booking-form-success-card-responsive bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8 mobile-p-6 text-center mobile-card">
-          <div className="booking-form-success-icon booking-form-success-icon-responsive w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 mobile-mb-6">
-            <FaCheckCircle className="booking-form-success-check booking-form-success-check-responsive text-blue-600 text-2xl mobile-text-xl" />
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FaCheckCircle className="text-blue-600 text-2xl" />
           </div>
-          <h2 className="booking-form-success-title booking-form-success-title-responsive text-2xl mobile-text-xl font-bold text-gray-900 mb-4 mobile-mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Reservasi Berhasil!
           </h2>
-          <p className="booking-form-success-text booking-form-success-text-responsive text-gray-600 mb-6 mobile-mb-6 leading-relaxed text-base mobile-text-sm">
+          <p className="text-gray-600 mb-6 leading-relaxed">
             {paymentType === "cash"
               ? "Reservasi venue Anda berhasil dibuat. Silakan datang ke lokasi untuk melakukan pembayaran dan konfirmasi."
               : "Reservasi venue Anda berhasil dibuat dan bukti pembayaran telah diupload. Menunggu konfirmasi admin."}
           </p>
 
-          <div className="booking-form-success-buttons booking-form-success-buttons-responsive space-y-3 mobile-space-y-3">
+          <div className="space-y-3">
             <button
               onClick={handleViewMyBookings}
-              className="booking-form-success-btn booking-form-success-btn-view booking-form-success-btn-responsive w-full bg-blue-500 text-white px-6 py-3 mobile-px-6 mobile-py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium flex items-center justify-center space-x-2 mobile-space-x-2 mobile-button"
+              className="w-full bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-colors font-medium flex items-center justify-center space-x-2"
             >
-              <FaEye className="booking-form-success-btn-icon booking-form-success-btn-icon-responsive mobile-icon-sm" />
+              <FaEye />
               <span>Lihat Reservasi Saya</span>
             </button>
 
             <button
               onClick={handleNavigateHome}
-              className="booking-form-success-btn booking-form-success-btn-home booking-form-success-btn-responsive w-full bg-gray-200 text-gray-800 px-6 py-3 mobile-px-6 mobile-py-3 rounded-xl hover:bg-gray-300 transition-colors font-medium flex items-center justify-center space-x-2 mobile-space-x-2 mobile-button"
+              className="w-full bg-gray-200 text-gray-800 px-6 py-3 rounded-xl hover:bg-gray-300 transition-colors font-medium flex items-center justify-center space-x-2"
             >
-              <FaHome className="booking-form-success-btn-icon booking-form-success-btn-icon-responsive mobile-icon-sm" />
+              <FaHome />
               <span>Kembali ke Beranda</span>
             </button>
 
             <button
               onClick={resetForm}
-              className="booking-form-success-btn booking-form-success-btn-reset booking-form-success-btn-responsive w-full bg-white text-blue-600 border border-blue-200 px-6 py-3 mobile-px-6 mobile-py-3 rounded-xl hover:bg-blue-50 transition-colors font-medium mobile-button"
+              className="w-full bg-white text-blue-600 border border-blue-200 px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors font-medium"
             >
               Buat Reservasi Lain
             </button>
@@ -269,46 +271,44 @@ const BookingForm = ({
   }
 
   return (
-    <div className="booking-form booking-form-container booking-form-responsive max-w-4xl mx-auto space-y-4 sm:space-y-6 mobile-space-y-4 px-4 mobile-px-4">
-      <div className="booking-form-header booking-form-header-container booking-form-header-responsive flex items-center space-x-3 sm:space-x-4 mobile-space-x-3">
+    <div className="max-w-4xl mx-auto space-y-4 px-4">
+      <div className="flex items-center space-x-3">
         <button
           onClick={handleCancel}
-          className="booking-form-back booking-form-back-btn booking-form-back-responsive flex items-center space-x-2 mobile-space-x-2 text-gray-600 hover:text-gray-900 transition-colors mobile-touch-target p-2 mobile-p-2 rounded-lg hover:bg-gray-100"
+          className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors p-2 rounded-lg hover:bg-gray-100"
         >
-          <FaArrowLeft className="booking-form-back-icon booking-form-back-icon-responsive mobile-icon-sm" />
-          <span className="booking-form-back-text booking-form-back-text-responsive text-sm sm:text-base mobile-text-sm">
-            Kembali
-          </span>
+          <FaArrowLeft />
+          <span className="text-sm">Kembali</span>
         </button>
-        <h1 className="booking-form-title booking-form-title-responsive text-xl sm:text-2xl mobile-text-xl font-bold text-gray-900">
+        <h1 className="text-xl font-bold text-gray-900">
           Form Reservasi Venue
         </h1>
       </div>
 
       {selectedVenue && (
-        <div className="booking-form-venue booking-form-venue-card booking-form-venue-responsive bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mobile-p-4 mobile-card">
-          <h3 className="booking-form-venue-title booking-form-venue-title-responsive text-base sm:text-lg mobile-text-base font-semibold text-gray-900 mb-3 sm:mb-4 mobile-mb-3">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+          <h3 className="text-base font-semibold text-gray-900 mb-3">
             Venue Dipilih
           </h3>
-          <div className="booking-form-venue-content booking-form-venue-content-responsive flex items-start space-x-3 sm:space-x-4 mobile-space-x-3">
+          <div className="flex items-start space-x-3">
             <img
-             src={
-  selectedVenue.images?.[0] ||
-  selectedVenue.imageUrl ||
-  "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200&h=150&fit=crop"
-}
+              src={
+                selectedVenue.images?.[0] ||
+                selectedVenue.imageUrl ||
+                "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200&h=150&fit=crop"
+              }
               alt={selectedVenue.name}
-              className="booking-form-venue-image booking-form-venue-image-responsive w-20 h-15 sm:w-24 sm:h-18 object-cover rounded-xl mobile-image flex-shrink-0"
+              className="w-20 h-15 object-cover rounded-xl flex-shrink-0"
             />
-            <div className="booking-form-venue-info booking-form-venue-info-responsive flex-1 min-w-0">
-              <h4 className="booking-form-venue-name booking-form-venue-name-responsive font-semibold text-gray-900 text-sm sm:text-base mobile-text-sm">
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-gray-900 text-sm">
                 {selectedVenue.name}
               </h4>
-              <p className="booking-form-venue-desc booking-form-venue-desc-responsive text-gray-600 text-xs sm:text-sm mobile-text-xs mt-1 line-clamp-2">
+              <p className="text-gray-600 text-xs mt-1 line-clamp-2">
                 {selectedVenue.description}
               </p>
-              <div className="booking-form-venue-price booking-form-venue-price-responsive flex items-center space-x-4 mobile-space-x-4 mt-2">
-                <span className="booking-form-venue-price-text booking-form-venue-price-text-responsive text-base sm:text-lg mobile-text-base font-bold text-blue-600">
+              <div className="flex items-center space-x-4 mt-2">
+                <span className="text-base font-bold text-blue-600">
                   Rp {selectedVenue.price?.toLocaleString("id-ID")}/hari
                 </span>
               </div>
@@ -317,19 +317,16 @@ const BookingForm = ({
         </div>
       )}
 
-      <div className="booking-form-main booking-form-main-card booking-form-main-responsive bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mobile-p-4 mobile-card">
-        <h2 className="booking-form-main-title booking-form-main-title-responsive text-lg sm:text-xl mobile-text-lg font-bold text-gray-900 mb-4 sm:mb-6 mobile-mb-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">
           Detail Reservasi
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="booking-form-form booking-form-form-container booking-form-form-responsive space-y-4 sm:space-y-6 mobile-space-y-4"
-        >
-          <div className="booking-form-grid booking-form-grid-container booking-form-grid-responsive grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mobile-grid-1">
-            <div className="booking-form-field booking-form-field-booking-name booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaCalendarAlt className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaCalendarAlt className="inline mr-2 text-blue-600" />
                 Nama Booking *
               </label>
               <input
@@ -338,14 +335,14 @@ const BookingForm = ({
                 value={formData.bookingName}
                 onChange={handleInputChange}
                 required
-                className="booking-form-input booking-form-input-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 placeholder="Nama untuk identifikasi booking"
               />
             </div>
 
-            <div className="booking-form-field booking-form-field-event-name booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaCalendarAlt className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaCalendarAlt className="inline mr-2 text-blue-600" />
                 Nama Acara/Reservasi *
               </label>
               <input
@@ -354,14 +351,14 @@ const BookingForm = ({
                 value={formData.eventName}
                 onChange={handleInputChange}
                 required
-                className="booking-form-input booking-form-input-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 placeholder="Acara pernikahan, Meeting perusahaan, dll"
               />
             </div>
 
-            <div className="booking-form-field booking-form-field-check-in booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaCalendarAlt className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaCalendarAlt className="inline mr-2 text-blue-600" />
                 Tanggal Mulai *
               </label>
               <input
@@ -371,13 +368,13 @@ const BookingForm = ({
                 onChange={handleInputChange}
                 required
                 min={new Date().toISOString().split("T")[0]}
-                className="booking-form-input booking-form-input-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
 
-            <div className="booking-form-field booking-form-field-check-out booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaClock className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaClock className="inline mr-2 text-blue-600" />
                 Tanggal Selesai *
               </label>
               <input
@@ -387,22 +384,22 @@ const BookingForm = ({
                 onChange={handleInputChange}
                 required
                 min={formData.checkIn || new Date().toISOString().split("T")[0]}
-                className="booking-form-input booking-form-input-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
             </div>
 
-            <div className="booking-form-field booking-form-field-time-slot booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaClock className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaClock className="inline mr-2 text-blue-600" />
                 Waktu Penggunaan *
               </label>
-              <div className="booking-form-select-wrapper booking-form-select-wrapper-responsive relative">
+              <div className="relative">
                 <select
                   name="timeSlot"
                   value={formData.timeSlot}
                   onChange={handleInputChange}
                   required
-                  className="booking-form-select booking-form-select-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
                 >
                   <option value="" disabled hidden>
                     Pilih Waktu Penggunaan
@@ -413,22 +410,22 @@ const BookingForm = ({
                     </option>
                   ))}
                 </select>
-                <FaChevronDown className="booking-form-select-icon booking-form-select-icon-responsive absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none mobile-icon-sm" />
+                <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
             </div>
 
-            <div className="booking-form-field booking-form-field-venue-setup booking-form-field-responsive mobile-form-group">
-              <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
-                <FaUsers className="booking-form-label-icon booking-form-label-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+            <div>
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                <FaUsers className="inline mr-2 text-blue-600" />
                 Setup Venue & Kapasitas *
               </label>
-              <div className="booking-form-select-wrapper booking-form-select-wrapper-responsive relative">
+              <div className="relative">
                 <select
                   name="venueSetup"
                   value={formData.venueSetup}
                   onChange={handleInputChange}
                   required
-                  className="booking-form-select booking-form-select-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none bg-white"
                 >
                   <option value="" disabled hidden>
                     Pilih Setup Venue & Kapasitas
@@ -439,11 +436,11 @@ const BookingForm = ({
                     </option>
                   ))}
                 </select>
-                <FaChevronDown className="booking-form-select-icon booking-form-select-icon-responsive absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none mobile-icon-sm" />
+                <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
               {formData.venueSetup && (
-                <div className="booking-form-capacity booking-form-capacity-info booking-form-capacity-responsive mt-2 p-2 sm:p-3 mobile-p-2 bg-blue-50 rounded-lg">
-                  <p className="booking-form-capacity-text booking-form-capacity-text-responsive text-xs sm:text-sm mobile-text-xs text-blue-700 font-medium">
+                <div className="mt-2 p-2 bg-blue-50 rounded-lg">
+                  <p className="text-xs text-blue-700 font-medium">
                     Kapasitas Terpilih: {getSelectedSetupCapacity()} orang
                   </p>
                 </div>
@@ -451,8 +448,8 @@ const BookingForm = ({
             </div>
           </div>
 
-          <div className="booking-form-field booking-form-field-special-requests booking-form-field-responsive mobile-form-group">
-            <label className="booking-form-label booking-form-label-responsive block text-sm mobile-text-sm font-semibold text-gray-900 mb-2 sm:mb-3 mobile-mb-2 mobile-form-label">
+          <div>
+            <label className="block text-sm font-semibold text-gray-900 mb-2">
               Permintaan Khusus (Opsional)
             </label>
             <textarea
@@ -460,44 +457,44 @@ const BookingForm = ({
               value={formData.specialRequests}
               onChange={handleInputChange}
               rows="4"
-              className="booking-form-textarea booking-form-textarea-responsive w-full px-3 sm:px-4 py-2 sm:py-3 mobile-form-input border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               placeholder="Permintaan khusus seperti dekorasi, catering, sound system tambahan, dll..."
             />
           </div>
 
-          <div className="booking-form-payment booking-form-payment-section booking-form-payment-responsive">
-            <h4 className="booking-form-payment-title booking-form-payment-title-responsive text-base sm:text-lg mobile-text-base font-semibold text-gray-900 mb-3 sm:mb-4 mobile-mb-3">
-              <FaMoneyBillWave className="booking-form-payment-icon booking-form-payment-icon-responsive inline mr-2 text-blue-600 mobile-icon-sm" />
+          <div>
+            <h4 className="text-base font-semibold text-gray-900 mb-3">
+              <FaMoneyBillWave className="inline mr-2 text-blue-600" />
               Pilih Metode Pembayaran *
             </h4>
 
-            <div className="booking-form-payment-methods booking-form-payment-methods-responsive grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mobile-grid-1 mb-4 sm:mb-6 mobile-mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
               <div
-                className={`booking-form-payment-method booking-form-payment-method-transfer booking-form-payment-method-responsive border-2 rounded-2xl p-3 sm:p-4 mobile-p-3 cursor-pointer transition-all mobile-touch-target ${
+                className={`border-2 rounded-2xl p-3 cursor-pointer transition-all ${
                   paymentType === "transfer"
                     ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
                     : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 }`}
                 onClick={() => setPaymentType("transfer")}
               >
-                <div className="booking-form-payment-method-content booking-form-payment-method-content-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
+                <div className="flex items-center space-x-2">
                   <input
                     type="radio"
                     name="paymentType"
                     value="transfer"
                     checked={paymentType === "transfer"}
                     onChange={() => setPaymentType("transfer")}
-                    className="booking-form-payment-radio booking-form-payment-radio-responsive text-blue-600 mobile-touch-target"
+                    className="text-blue-600"
                   />
-                  <div className="booking-form-payment-method-info booking-form-payment-method-info-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
-                    <div className="booking-form-payment-method-icon booking-form-payment-method-icon-responsive w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <FaUniversity className="booking-form-payment-method-icon-inner booking-form-payment-method-icon-inner-responsive text-blue-600 mobile-icon-sm" />
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <FaUniversity className="text-blue-600" />
                     </div>
-                    <div className="booking-form-payment-method-text booking-form-payment-method-text-responsive flex-1">
-                      <p className="booking-form-payment-method-name booking-form-payment-method-name-responsive font-semibold text-gray-900 text-sm sm:text-base mobile-text-sm">
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900 text-sm">
                         Transfer Bank
                       </p>
-                      <p className="booking-form-payment-method-desc booking-form-payment-method-desc-responsive text-xs sm:text-sm mobile-text-xs text-gray-600">
+                      <p className="text-xs text-gray-600">
                         Bayar via transfer + upload bukti
                       </p>
                     </div>
@@ -506,31 +503,31 @@ const BookingForm = ({
               </div>
 
               <div
-                className={`booking-form-payment-method booking-form-payment-method-cash booking-form-payment-method-responsive border-2 rounded-2xl p-3 sm:p-4 mobile-p-3 cursor-pointer transition-all mobile-touch-target ${
+                className={`border-2 rounded-2xl p-3 cursor-pointer transition-all ${
                   paymentType === "cash"
                     ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
                     : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                 }`}
                 onClick={() => setPaymentType("cash")}
               >
-                <div className="booking-form-payment-method-content booking-form-payment-method-content-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
+                <div className="flex items-center space-x-2">
                   <input
                     type="radio"
                     name="paymentType"
                     value="cash"
                     checked={paymentType === "cash"}
                     onChange={() => setPaymentType("cash")}
-                    className="booking-form-payment-radio booking-form-payment-radio-responsive text-blue-600 mobile-touch-target"
+                    className="text-blue-600"
                   />
-                  <div className="booking-form-payment-method-info booking-form-payment-method-info-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
-                    <div className="booking-form-payment-method-icon booking-form-payment-method-icon-responsive w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <FaStore className="booking-form-payment-method-icon-inner booking-form-payment-method-icon-inner-responsive text-blue-600 mobile-icon-sm" />
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <FaStore className="text-blue-600" />
                     </div>
-                    <div className="booking-form-payment-method-text booking-form-payment-method-text-responsive flex-1">
-                      <p className="booking-form-payment-method-name booking-form-payment-method-name-responsive font-semibold text-gray-900 text-sm sm:text-base mobile-text-sm">
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900 text-sm">
                         Bayar di Tempat
                       </p>
-                      <p className="booking-form-payment-method-desc booking-form-payment-method-desc-responsive text-xs sm:text-sm mobile-text-xs text-gray-600">
+                      <p className="text-xs text-gray-600">
                         Bayar saat datang ke lokasi
                       </p>
                     </div>
@@ -540,38 +537,42 @@ const BookingForm = ({
             </div>
 
             {paymentType === "transfer" && paymentMethods.length > 0 && (
-              <div className="booking-form-bank-methods booking-form-bank-methods-responsive grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mobile-grid-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {paymentMethods.map((method) => (
                   <div
                     key={method.id}
-                    className={`booking-form-bank-method booking-form-bank-method-responsive border rounded-2xl p-3 sm:p-4 mobile-p-3 cursor-pointer transition-all mobile-touch-target ${
+                    className={`border rounded-2xl p-3 cursor-pointer transition-all ${
                       selectedPayment === method.id
                         ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
                         : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                     onClick={() => setSelectedPayment(method.id)}
                   >
-                    <div className="booking-form-bank-method-content booking-form-bank-method-content-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
+                    <div className="flex items-center space-x-2">
                       <input
                         type="radio"
                         name="paymentMethod"
                         value={method.id}
                         checked={selectedPayment === method.id}
                         onChange={() => setSelectedPayment(method.id)}
-                        className="booking-form-bank-radio booking-form-bank-radio-responsive text-blue-600 mobile-touch-target"
+                        className="text-blue-600"
                       />
-                      <div className="booking-form-bank-method-info booking-form-bank-method-info-responsive flex items-center space-x-2 sm:space-x-3 mobile-space-x-2">
-                        <div className="booking-form-bank-method-icon booking-form-bank-method-icon-responsive w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                          <FaUniversity className="booking-form-bank-method-icon-inner booking-form-bank-method-icon-inner-responsive text-blue-600 mobile-icon-sm" />
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+                          <img 
+                            src={logo_mandiri} 
+                            alt="Mandiri" 
+                            className="w-6 h-6 object-contain"
+                          />
                         </div>
-                        <div className="booking-form-bank-method-text booking-form-bank-method-text-responsive flex-1">
-                          <p className="booking-form-bank-method-name booking-form-bank-method-name-responsive font-semibold text-gray-900 text-sm sm:text-base mobile-text-sm">
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-900 text-sm">
                             {method.name}
                           </p>
-                          <p className="booking-form-bank-method-number booking-form-bank-method-number-responsive text-xs sm:text-sm mobile-text-xs text-gray-600">
+                          <p className="text-xs text-gray-600">
                             {method.accountNumber}
                           </p>
-                          <p className="booking-form-bank-method-account booking-form-bank-method-account-responsive text-xs sm:text-sm mobile-text-xs text-gray-600">
+                          <p className="text-xs text-gray-600">
                             a.n. {method.accountName}
                           </p>
                         </div>
@@ -583,11 +584,11 @@ const BookingForm = ({
             )}
 
             {paymentType === "cash" && (
-              <div className="booking-form-cash-info booking-form-cash-info-responsive bg-blue-50 border border-blue-200 rounded-2xl p-3 sm:p-4 mobile-p-3">
-                <p className="booking-form-cash-title booking-form-cash-title-responsive text-blue-800 font-medium text-sm sm:text-base mobile-text-sm">
+              <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3">
+                <p className="text-blue-800 font-medium text-sm">
                   Pembayaran di Tempat
                 </p>
-                <p className="booking-form-cash-desc booking-form-cash-desc-responsive text-blue-600 text-xs sm:text-sm mobile-text-xs mt-1">
+                <p className="text-blue-600 text-xs mt-1">
                   Anda akan mendapat kartu konfirmasi untuk dibawa saat datang ke lokasi untuk melakukan pembayaran.
                 </p>
               </div>
@@ -595,53 +596,53 @@ const BookingForm = ({
           </div>
 
           {selectedVenue && formData.checkIn && formData.checkOut && formData.timeSlot && (
-            <div className="booking-form-summary booking-form-summary-card booking-form-summary-responsive bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 mobile-p-4">
-              <h4 className="booking-form-summary-title booking-form-summary-title-responsive text-base sm:text-lg mobile-text-base font-semibold text-gray-900 mb-3 sm:mb-4 mobile-mb-3">
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+              <h4 className="text-base font-semibold text-gray-900 mb-3">
                 Ringkasan Pembayaran
               </h4>
-              <div className="booking-form-summary-content booking-form-summary-content-responsive space-y-2 sm:space-y-3 mobile-space-y-2">
-                <div className="booking-form-summary-item booking-form-summary-item-responsive flex justify-between">
-                  <span className="booking-form-summary-label booking-form-summary-label-responsive text-gray-600 text-sm sm:text-base mobile-text-sm">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 text-sm">
                     Harga venue per hari
                   </span>
-                  <span className="booking-form-summary-value booking-form-summary-value-responsive font-semibold text-sm sm:text-base mobile-text-sm">
+                  <span className="font-semibold text-sm">
                     Rp {selectedVenue.price?.toLocaleString("id-ID")}
                   </span>
                 </div>
-                <div className="booking-form-summary-item booking-form-summary-item-responsive flex justify-between">
-                  <span className="booking-form-summary-label booking-form-summary-label-responsive text-gray-600 text-sm sm:text-base mobile-text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 text-sm">
                     Jumlah hari
                   </span>
-                  <span className="booking-form-summary-value booking-form-summary-value-responsive font-semibold text-sm sm:text-base mobile-text-sm">
+                  <span className="font-semibold text-sm">
                     {calculateDays()} hari
                   </span>
                 </div>
                 {formData.timeSlot && (
-                  <div className="booking-form-summary-item booking-form-summary-item-responsive flex justify-between">
-                    <span className="booking-form-summary-label booking-form-summary-label-responsive text-gray-600 text-sm sm:text-base mobile-text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 text-sm">
                       Waktu penggunaan
                     </span>
-                    <span className="booking-form-summary-value booking-form-summary-value-responsive font-semibold text-sm sm:text-base mobile-text-sm">
+                    <span className="font-semibold text-sm">
                       {timeSlotOptions.find((slot) => slot.value === formData.timeSlot)?.label}
                     </span>
                   </div>
                 )}
                 {formData.venueSetup && (
-                  <div className="booking-form-summary-item booking-form-summary-item-responsive flex justify-between">
-                    <span className="booking-form-summary-label booking-form-summary-label-responsive text-gray-600 text-sm sm:text-base mobile-text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 text-sm">
                       Setup venue
                     </span>
-                    <span className="booking-form-summary-value booking-form-summary-value-responsive font-semibold text-sm sm:text-base mobile-text-sm">
+                    <span className="font-semibold text-sm">
                       {selectedVenue.setupOptions?.find((setup) => setup.type === formData.venueSetup)?.label}
                     </span>
                   </div>
                 )}
-                <div className="booking-form-summary-total booking-form-summary-total-responsive border-t border-gray-300 pt-2 sm:pt-3 mobile-pt-2">
-                  <div className="booking-form-summary-total-item booking-form-summary-total-item-responsive flex justify-between text-base sm:text-lg mobile-text-base font-bold">
-                    <span className="booking-form-summary-total-label booking-form-summary-total-label-responsive">
+                <div className="border-t border-gray-300 pt-2">
+                  <div className="flex justify-between text-base font-bold">
+                    <span>
                       Total Pembayaran
                     </span>
-                    <span className="booking-form-summary-total-value booking-form-summary-total-value-responsive text-blue-600">
+                    <span className="text-blue-600">
                       Rp {calculateTotal().toLocaleString("id-ID")}
                     </span>
                   </div>
@@ -650,11 +651,11 @@ const BookingForm = ({
             </div>
           )}
 
-          <div className="booking-form-actions booking-form-actions-responsive flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mobile-space-y-3">
+          <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
             <button
               type="button"
               onClick={handleCancel}
-              className="booking-form-cancel booking-form-cancel-btn booking-form-cancel-responsive flex-1 bg-gray-200 text-gray-800 py-3 sm:py-4 mobile-py-3 px-4 sm:px-6 mobile-px-4 rounded-2xl hover:bg-gray-300 transition-colors font-semibold text-sm sm:text-lg mobile-text-sm mobile-button"
+              className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-2xl hover:bg-gray-300 transition-colors font-semibold text-sm"
             >
               Batal
             </button>
@@ -670,11 +671,11 @@ const BookingForm = ({
                 !formData.timeSlot ||
                 !formData.venueSetup
               }
-              className="booking-form-submit booking-form-submit-btn booking-form-submit-responsive flex-1 bg-blue-500 text-white py-3 sm:py-4 mobile-py-3 px-4 sm:px-6 mobile-px-4 rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-sm sm:text-lg mobile-text-sm flex items-center justify-center mobile-button"
+              className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-2xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-sm flex items-center justify-center"
             >
               {loading ? (
                 <>
-                  <FaSpinner className="booking-form-submit-spinner booking-form-submit-spinner-responsive animate-spin mr-2 sm:mr-3 mobile-mr-2 mobile-icon-sm" />
+                  <FaSpinner className="animate-spin mr-2" />
                   Memproses Reservasi...
                 </>
               ) : (
